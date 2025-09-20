@@ -1,0 +1,35 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "node",
+  "package-name": "karin-plugin-gamepush",
+  "bump-minor-pre-major": true,
+  "bump-patch-for-minor-pre-major": true,
+  "changelog-path": "CHANGELOG.md",
+  "changelog-sections": [
+    {"type": "feat", "section": "Features"},
+    {"type": "fix", "section": "Bug Fixes"},
+    {"type": "perf", "section": "Performance Improvements"},
+    {"type": "revert", "section": "Reverts"},
+    {"type": "docs", "section": "Documentation"},
+    {"type": "style", "section": "Styles"},
+    {"type": "chore", "section": "Miscellaneous Chores"},
+    {"type": "refactor", "section": "Code Refactoring"},
+    {"type": "test", "section": "Tests"},
+    {"type": "build", "section": "Build System"}
+  ],
+  "include-v-in-tag": true,
+  "pull-request-title-pattern": "chore: release ${version}",
+  "tag-separator": "/",
+  "skip-github-release": false,
+  "release-as": null,
+  "prerelease": false,
+  "monorepo-tags": false,
+  "always-link-local": false,
+  "separate-pull-requests": false,
+  "plugins": [
+    {
+      "type": "node-workspace",
+      "merge": false
+    }
+  ]
+}
