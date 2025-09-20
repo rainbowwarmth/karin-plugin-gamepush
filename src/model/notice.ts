@@ -246,7 +246,7 @@ class Notifier extends base {
 
     const img = segment.image(`base64://` + await render.render(data))
     img
-      ? api.sendToGroups(img.toString(), game, gameConfig, pushChangeType)
+      ? api.sendToGroups(img, game, gameConfig, pushChangeType)
       : logger.error(`[karin-plugin-gamepush] 发送图片消息失败`)
   }
 

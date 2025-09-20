@@ -110,7 +110,7 @@ class Api extends base {
     }
   }
 
-  async sendToGroups (msg: string, game: GameKey, gameConfig: any, pushChangeType: any) {
+  async sendToGroups (msg: any, game: GameKey, gameConfig: any, pushChangeType: any) {
     if (!gameConfig?.pushGroups?.length) {
       logger.debug(`[karin-plugin-gamepush][${getGameName(game)}] 未配置推送群组`)
       return
