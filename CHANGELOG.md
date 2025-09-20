@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.2...v1.0.3) (2025-09-20)
+
+
+### Features
+
+* 删除无用依赖 ([e3c76ab](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/e3c76ab43774b8e04c194711ade6c656ff62b9f9))
+
 ## [1.0.2](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.1...v1.0.2) (2025-09-20)
 
 
