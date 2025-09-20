@@ -98,8 +98,8 @@ export const zzzPreDownloadLinks = karin.command(`^#*${zzzReg}获取预下载链
   permission: "all"
 })
 
-export const zzzVersionData = karin.command(`^#*${zzzReg}?版本数据(.*)$`, async (e) => {
-  const input = e.msg.replace(new RegExp(`#*${zzzReg}?版本数据`, "i"), "").trim()
+export const zzzVersionData = karin.command(`^#*${zzzReg}版本数据(.*)$`, async (e) => {
+  const input = e.msg.replace(new RegExp(`#*${zzzReg}版本数据`, "i"), "").trim()
   try {
     if (!input) {
       const mainVersions = await (await db).getMainData("zzz")

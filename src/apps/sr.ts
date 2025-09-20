@@ -98,8 +98,8 @@ export const srPreDownloadLinks = karin.command(`^#*${srReg}获取预下载链�
   permission: "all"
 })
 
-export const srVersionData = karin.command(`^#*${srReg}?版本数据(.*)$`, async (e) => {
-  const input = e.msg.replace(new RegExp(`#*${srReg}?版本数据`, "i"), "").trim()
+export const srVersionData = karin.command(`^#*${srReg}版本数据(.*)$`, async (e) => {
+  const input = e.msg.replace(new RegExp(`#*${srReg}版本数据`, "i"), "").trim()
   try {
     if (!input) {
       const mainVersions = await (await db).getMainData("sr")

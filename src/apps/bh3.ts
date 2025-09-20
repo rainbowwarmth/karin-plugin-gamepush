@@ -98,8 +98,8 @@ export const bh3PreDownloadLinks = karin.command(`^#*${bh3Reg}获取预下载链
   permission: "all"
 })
 
-export const bh3VersionData = karin.command(`^#*${bh3Reg}?版本数据(.*)$`, async (e) => {
-  const input = e.msg.replace(new RegExp(`#*${bh3Reg}?版本数据`, "i"), "").trim()
+export const bh3VersionData = karin.command(`^#*${bh3Reg}版本数据(.*)$`, async (e) => {
+  const input = e.msg.replace(new RegExp(`#*${bh3Reg}版本数据`, "i"), "").trim()
   try {
     if (!input) {
       const mainVersions = await (await db).getMainData("bh3")
