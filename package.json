@@ -16,8 +16,7 @@
     "app": "node lib/app.js",
     "build": "tsup",
     "dev": "cross-env EBV_FILE=\"development.env\" node --import tsx src/app.ts",
-    "pub": "npm publish --access public",
-    "install": "node -e \"const fs=require('fs');const path=require('path');const sqlite3Path=path.join('node_modules','sqlite3');if(fs.existsSync(sqlite3Path)){const buildPath=path.join(sqlite3Path,'build');if(!fs.existsSync(buildPath)){require('child_process').execSync('pnpx @karinjs/prebuild-install -r napi --target 6 --pkg_version=5.1.7 --pkg_name=sqlite3',{cwd:sqlite3Path,stdio:'inherit'})}}\""
+    "pub": "npm publish --access public"
   },
   "main": "lib/index.js",
   "devDependencies": {
@@ -68,7 +67,6 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-
     "chokidar": "^4.0.3",
     "node-fetch": "^3.3.2",
     "sequelize": "^6.37.7",
