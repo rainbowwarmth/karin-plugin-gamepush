@@ -5,7 +5,6 @@ import { dir } from '@/components/path'
 
 type GameKey = 'sr' | 'ys' | 'zzz' | 'bh3' | 'ww'
 
-// 定义配置对象的类型
 interface GameConfigItem {
   enable?: boolean
   log?: boolean
@@ -15,7 +14,7 @@ interface GameConfigItem {
 }
 
 interface FrontendConfig {
-  [key: string]: GameConfigItem[] // 允许使用字符串索引
+  [key: string]: GameConfigItem[]
 }
 
 export default defineConfig({
@@ -36,11 +35,9 @@ export default defineConfig({
     description: dir.pkg.description,
   },
   components: async () => {
-    // 使用定义的类型
     const currentConfig: FrontendConfig = config.getFrontendConfig() || {}
 
     return (gameIds as GameKey[]).map(gameId => {
-      // 现在可以安全地使用 gameId 索引 currentConfig
       const gameConfigArray = currentConfig[gameId] || []
       const gameConfig = gameConfigArray.length > 0 ? gameConfigArray[0] : {}
       const gameName = getGameName(gameId)
