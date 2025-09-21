@@ -5,6 +5,11 @@
   "type": "module",
   "description": "自动监控游戏版本更新并推送通知",
   "homepage": "https://github.com/rainbowwarmth/karin-plugin-gamepush",
+  "keywords": [
+    "karin-plugin",
+    "karin"
+  ],
+  "license": "MIT License",
   "bugs": {
     "url": "https://github.com/rainbowwarmth/karin-plugin-gamepush/issues"
   },
