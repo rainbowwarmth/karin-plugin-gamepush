@@ -1,11 +1,16 @@
 # Changelog
 
-## [1.1.0](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.4...v1.1.0) (2025-10-26)
+## [1.0.5](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.4...v1.1.0) (2025-10-26)
 
 
 ### Features
 
-* 添加 HTML 模板选择并更新游戏通知样式 && README 更新 ([f07ed06](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/f07ed0666b7247bee3b9f129b2cb4f853a6f52bc))
+* feat: 添加 HTML 模板选择并更新游戏通知样式([2b13c01](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/2b13c0109d470e79fc100a5570d8cdc61b041142))
+
+### Documentatio
+
+* docs: README 更新 ([f07ed06](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/f07ed0666b7247bee3b9f129b2cb4f853a6f52bc))
+
 
 ## [1.0.4](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.3...v1.0.4) (2025-09-21)
 
