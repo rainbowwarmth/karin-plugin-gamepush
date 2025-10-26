@@ -14,7 +14,8 @@ type GameConfig = {
   log: boolean
   cron: string
   pushGroups: any[]
-  pushChangeType: string
+  pushChangeType: string,
+  html: string
 }
 
 class Config {
@@ -36,7 +37,7 @@ class Config {
 
   getDefaultConfig () {
     return Object.fromEntries(
-      gameIds.map((id) => [id, { enable: true, log: false, cron: DEFAULT_CRON, pushGroups: [], pushChangeType: "1" }])
+      gameIds.map((id) => [id, { enable: true, log: false, cron: DEFAULT_CRON, pushGroups: [], pushChangeType: "1" , html: "default" }])
     )
   }
 
@@ -69,7 +70,8 @@ class Config {
             log: !!cfg.log,
             cron: cfg.cron || DEFAULT_CRON,
             pushGroups: Config.formatPushGroups(cfg.pushGroups),
-            pushChangeType: cfg.pushChangeType || "1"
+            pushChangeType: cfg.pushChangeType || "1",
+            html: cfg.html || "default"
           }
         }
       }
@@ -87,7 +89,8 @@ class Config {
           log: cfg.log,
           cron: cfg.cron,
           pushGroups: Config.serializePushGroups(cfg.pushGroups),
-          pushChangeType: cfg.pushChangeType
+          pushChangeType: cfg.pushChangeType,
+          html: cfg.html
         }
         ])
       )
@@ -166,7 +169,8 @@ class Config {
           log: false,
           cron: cfg.cron || DEFAULT_CRON,
           pushGroups: Config.formatPushGroups(cfg.pushGroups),
-          pushChangeType: cfg.pushChangeType || "1"
+          pushChangeType: cfg.pushChangeType || "1",
+          html: cfg.html || "default"
         }
       ]
     }
@@ -184,7 +188,8 @@ class Config {
         log: Boolean(cfg.log ?? true),
         cron: cfg.cron || DEFAULT_CRON,
         pushGroups: Config.formatPushGroups(cfg.pushGroups || []),
-        pushChangeType: cfg.pushChangeType || "1"
+        pushChangeType: cfg.pushChangeType || "1",
+        html: cfg.html || "default"
       }
     }
     return saveData

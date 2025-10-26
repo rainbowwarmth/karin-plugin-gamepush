@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8" />
+	<title>{{gameName}}更新通知</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" type="text/css" href="{{pluResPath}}html/GamePush-Plugin/GamePush-Plugin-Simple.css" />
+</head>
+<body>
+	<div class="container">
+		<header class="header">
+			<img class="game-icon" src="{{icon}}" alt="{{gameName}} icon" />
+			<div class="title-section">
+				<h1 class="title">{{gameName}}更新通知</h1>
+				<p class="subtitle">{{ type === 'pre' ? '预下载资源已开放' : type === 'main'? '新版本已发布' :
+              '预下载资源已关闭' }}</p>
+				<div class="update-time"> {{ type === 'pre' ? '开放时间: ' : type === 'main' ? '更新时间：': '关闭时间：'
+              }}{{date}}</div>
+			</div>
+		</header>
+		<main class="main-content">
+			<div class="cards">
+				<div class="card version-card" data-old-version="{{oldVersion}}" data-new-version="{{newVersion}}">
+					<div class="card-title"><span class="emoji-text">🛠️</span> 新版本</div>
+					<div class="version-value"></div>
+				</div>
+				<div class="card">
+					<div class="card-title"><span class="emoji-text">📦</span> 完整大小</div>
+					<div class="card-size">{{formattedTotalSize}}</div>
+					<div class="card-label">含中文语音资源包</div>
+				</div>
+				<div class="card">
+					<div class="card-title"><span class="emoji-text">⚡</span> 增量更新</div>
+					<div class="card-size warning">{{incrementalSize}}</div>
+					<div class="card-label">含中文语音资源包</div>
+				</div>
+			</div>
+			<div class="update-prompt update-prompt-{{ type === 'pre' ? 'pre' : 'main' }}">{{ type === 'pre' ? '请提前下载游戏资源' : '请及时更新客户端以获取完整游戏体验' }}</div>
+		</main>
+		<footer class="footer">
+			<div class="creator-info"> Created by <strong>{{bot.name}}</strong> &nbsp;•&nbsp; <span class="plugin">{{plugin.name}} <span class="version">v{{plugin.version}}</span> </span>
+			</div>
+			<div class="date-info">2025/10/13</div>
+		</footer>
+	</div>
+	<script>
+		document.querySelectorAll(".version-card").forEach(card => {
+		  const oldVer = card.dataset.oldVersion;
+		  const newVer = card.dataset.newVersion;
+		  const el = card.querySelector(".version-value");
+		  if (oldVer) {
+		    el.innerHTML = `
+		      <span class="old-version">${oldVer}</span>
+		      <span class="arrow">→</span>
+		      <span class="new-version">${newVer}</span>
+		    `;
+		  } else {
+		    el.innerHTML = `<span class="new-version">${newVer}</span>`;
+		  }
+		});
+	</script>
+</body>
+</html>

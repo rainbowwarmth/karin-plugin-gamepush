@@ -10,7 +10,8 @@ interface GameConfigItem {
   log?: boolean
   cron?: string
   pushGroups?: Array<string | { botId: string; groupId: string }>
-  pushChangeType?: string
+  pushChangeType?: string,
+  html?: string
 }
 
 interface FrontendConfig {
@@ -98,6 +99,24 @@ export default defineConfig({
                   })
                 ],
                 description: "选择推送的变更类型"
+              }),
+              components.radio.group(`pushChangeType`, {
+                label: "html模板",
+                orientation: "horizontal",
+                defaultValue: gameConfig.html || "default",
+                radio: [
+                  components.radio.create("type-1", {
+                    label: "默认模板",
+                    description: "以默认的html模板渲染推送内容",
+                    value: "default"
+                  }),
+                  components.radio.create("type-2", {
+                    label: "简约模板",
+                    description: "以简约的html模板渲染推送内容",
+                    value: "Simple"
+                  })
+                ],
+                description: "请选择渲染的html模板"
               })
             ]
           })
@@ -117,6 +136,7 @@ export default defineConfig({
       const cron = gameConfig.cron || "0 0/5 * * * *"
       const pushChangeType = gameConfig.pushChangeType || "1"
       const pushGroups = gameConfig.pushGroups || []
+      const html = gameConfig.hhtml || "default"
 
       saveData[gameId] = [
         {
@@ -124,7 +144,8 @@ export default defineConfig({
           cron,
           log,
           pushGroups,
-          pushChangeType
+          pushChangeType,
+          html
         }
       ]
     })

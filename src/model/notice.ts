@@ -149,7 +149,7 @@ class Notifier extends base {
       }
 
       if (pushChangeType === "1") {
-        await this.sendImageMessage(type, game, gameConfig, templateData, pushChangeType)
+        await this.sendImageMessage(type, game, gameConfig, templateData, pushChangeType, gameConfig.html)
       } else {
         await this.sendTextMessage(type, game, gameConfig, templateData, pushChangeType)
       }
@@ -227,8 +227,8 @@ class Notifier extends base {
     return { formattedTotalSize, incrementalSize, Ver }
   }
 
-  async sendImageMessage (type: string | undefined, game: GameKey, gameConfig: { enable: boolean; log: boolean; cron: string; pushGroups: any[]; pushChangeType: string }, templateData: { gameName: string; oldVersion: string; newVersion: string; Ver: any; formattedTotalSize: string; incrementalSize: string }, pushChangeType: string) {
-    const screenData = await this.screenData(game, type)
+  async sendImageMessage (type: string | undefined, game: GameKey, gameConfig: { enable: boolean; log: boolean; cron: string; pushGroups: any[]; pushChangeType: string, html: string}, templateData: { gameName: string; oldVersion: string; newVersion: string; Ver: any; formattedTotalSize: string; incrementalSize: string }, pushChangeType: string, html: string ) {
+    const screenData = await this.screenData(game, type, html)
     const data = {
       name: 'karin-plugin-gamepush',
       file: screenData.tplFile,

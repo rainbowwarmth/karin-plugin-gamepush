@@ -30,14 +30,14 @@ export default class base {
     return new Date().toISOString().slice(0, 10).replace(/-/g, "")
   }
 
-  screenData (game: GameKey, type = "") {
-    return this.getScreenData(game, type)
+  screenData (game: GameKey, type = "", html = "") {
+    return this.getScreenData(game, type, html)
   }
 
-  async getScreenData (game: GameKey, type = "") {
+  async getScreenData (game: GameKey, type = "", html = "") {
     let basic = {
       imgType: "jpeg",
-      tplFile: `${dir.pluginDir}/resources/html/GamePush-Plugin/GamePush-Plugin.html`,
+      tplFile: `${dir.pluginDir}/resources/html/GamePush-Plugin/GamePush-Plugin-${html}.html`,
       fontsPath: `${dir.pluginDir}/resources/fonts/`,
       pluResPath: `${dir.pluginDir}/resources/`,
       htmlSavePath: `${dir.pluginDir}/@karinjs/karin-plugin-GamePush/html/`,

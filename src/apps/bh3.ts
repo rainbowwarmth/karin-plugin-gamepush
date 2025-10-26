@@ -52,52 +52,6 @@ export const bh3Ver = karin.command(`^#*${bh3Reg}当前版本$`, async (e) => {
   permission: "all"
 })
 
-export const bh3DownloadLinks = karin.command(`^#*${bh3Reg}获取下载链接$`, async (e) => {
-  try {
-    const { data, patch } = await download.getDownloadData("bh3", "main") as {
-      data: string,
-      patch: string
-    }
-    if (!data) return e.reply("当前没有可用的正式版本下载", { reply: true })
-    const { msg, client, patch_client } = download.formatDownloadInfo("bh3", data, "main", patch) as {
-      msg: string,
-      client: string,
-      patch_client: string
-    }
-    return await e.bot.sendForwardMsg(e.contact, common.makeForward([msg, client, patch_client], e.selfId, e.bot.account.name))
-  } catch (err: any) {
-    return e.reply(`❌ 获取失败：${err.message}`, { reply: true })
-  }
-}, {
-  name: "GamePush-崩坏3下载链接",
-  priority: 100,
-  event: "message",
-  permission: "all"
-})
-
-export const bh3PreDownloadLinks = karin.command(`^#*${bh3Reg}获取预下载链接$`, async (e) => {
-  try {
-    const { data, patch } = await download.getDownloadData("bh3", "pre") as {
-      data: string,
-      patch: string
-    }
-    if (!data) return e.reply("🚫 崩坏3当前未开放预下载", { reply: true })
-    const { msg, client, patch_client } = download.formatDownloadInfo("bh3", data, "pre", patch) as {
-      msg: string,
-      client: string,
-      patch_client: string
-    }
-    return await e.bot.sendForwardMsg(e.contact, common.makeForward([msg, client, patch_client], e.selfId, e.bot.account.name))
-  } catch (err: any) {
-    return e.reply(`❌ 预下载获取失败：${err.message}`, { reply: true })
-  }
-}, {
-  name: "GamePush-崩坏3预下载链接",
-  priority: 100,
-  event: "message",
-  permission: "all"
-})
-
 export const bh3VersionData = karin.command(`^#*${bh3Reg}版本数据(.*)$`, async (e) => {
   const input = e.msg.replace(new RegExp(`#*${bh3Reg}版本数据`, "i"), "").trim()
   try {
