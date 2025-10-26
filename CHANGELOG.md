@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.6](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.5...v1.0.6) (2025-10-26)
+
+
+### Bug Fixes
+
+* id错误 ([4bf347b](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/4bf347bb1448e0fe402be2f771a909308f5aa038))
+
 ## [1.0.5](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.4...v1.1.0) (2025-10-26)
 
 
