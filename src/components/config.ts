@@ -195,7 +195,7 @@ class Config {
     return saveData
   }
 
-  saveFromFrontend (data: any) {
+  async saveFromFrontend (data: any) {
     try {
       logger.debug(`[karin-plugin-gamepush] 接收到的原始数据:`, JSON.stringify(data, null, 2))
       let saveData = this.parseFrontendConfig(data)
@@ -216,7 +216,7 @@ class Config {
       }
       return { success: false, message: "保存配置文件时出错" }
     } catch (err: any) {
-      logger.error(`[karin-plugin-gamepush] 前端配置保存失败`, err)
+      logger.error('[karin-plugin-gamepush] 前端配置保存失败', err)
       return { success: false, message: `配置保存失败: ${err.message}` }
     }
   }

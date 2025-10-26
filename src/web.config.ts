@@ -1,6 +1,6 @@
 import { components, defineConfig } from 'node-karin'
 import { gameIds, getGameName } from '@/model/util'
-import config from '@/components/config'
+import cfg from '@/components/config'
 import { dir } from '@/components/path'
 
 type GameKey = 'sr' | 'ys' | 'zzz' | 'bh3' | 'ww'
@@ -20,8 +20,8 @@ interface FrontendConfig {
 
 export default defineConfig({
   info: {
-    id: "karin-plugin-gamepush",
-    name: "游戏更新推送插件",
+    id: 'karin-plugin-gamepush',
+    name: '游戏更新推送插件',
     author: {
       name: "RainBow",
       home: "https://github.com/rainbowwarmth/",
@@ -36,7 +36,7 @@ export default defineConfig({
     description: dir.pkg.description,
   },
   components: async () => {
-    const currentConfig: FrontendConfig = config.getFrontendConfig() || {}
+    const currentConfig: FrontendConfig = cfg.getFrontendConfig() || {}
 
     return (gameIds as GameKey[]).map(gameId => {
       const gameConfigArray = currentConfig[gameId] || []
@@ -133,10 +133,10 @@ export default defineConfig({
       const gameConfig = gameSettings.length > 0 ? gameSettings[0] : {}
       const enable = gameConfig.enable !== undefined ? gameConfig.enable : true
       const log = gameConfig.log !== undefined ? gameConfig.log : true
-      const cron = gameConfig.cron || "0 0/5 * * * *"
-      const pushChangeType = gameConfig.pushChangeType || "1"
+      const cron = gameConfig.cron || '0 0/5 * * * *'
+      const pushChangeType = gameConfig.pushChangeType || '1'
       const pushGroups = gameConfig.pushGroups || []
-      const html = gameConfig.hhtml || "default"
+      const html = gameConfig.html || 'default'
 
       saveData[gameId] = [
         {
@@ -150,11 +150,10 @@ export default defineConfig({
       ]
     })
 
-    const result = await config.saveFromFrontend(saveData)
-
+    const result = await cfg.saveFromFrontend(saveData)
     return {
       success: result.success,
-      message: result.message || "配置保存成功"
+      message: result.message || '配置保存成功'
     }
   }
 })
