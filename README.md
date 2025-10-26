@@ -72,8 +72,8 @@ pnpm add karin-plugin-gamepush
 | `#原神关闭版本推送` | 关闭原神版本推送 | Master   | | 
 | `#原神当前版本`     | 查看原神当前版本 | 所有用户 | |
 | `#原神版本数据`     | 查看原神历史版本更新大小 |  所有用户 | |
-| `#星铁获取下载链接` | 查看星铁当前版本下载链接 | 所有用户 | 原神不支持获取|
-| `#星铁获取预下载链接` | 查看星铁当前版本预下载链接 | 所有用户 | 原神不支持获取 |
+| `#星铁获取下载链接` | 查看星铁当前版本下载链接 | 所有用户 | 原神、崩坏3不支持获取|
+| `#星铁获取预下载链接` | 查看星铁当前版本预下载链接 | 所有用户 | 原神、崩坏3不支持获取 |
 
 ### 支持的游戏命令前缀
 
@@ -91,6 +91,7 @@ pnpm add karin-plugin-gamepush
 | `#[游戏]删除预下载rediskey` | 删除预下载 Redis 键值 | Master |
 | `#[游戏]设置rediskey`       | 设置游戏 Redis 键值   | Master |
 | `#[游戏]设置预下载rediskey`       | 设置游戏预下载 Redis 键值   | Master |
+| `#更新游戏版本数据` | 强制覆盖本地的游戏版本数据  | Master |
 
 ---
 
@@ -170,6 +171,6 @@ cron: "0 0/5 * * * *" // 每5分钟执行一次
 
 **⭐ 如果这个项目对你有帮助，请给个 Star 支持一下！**
 
-![Star History](https://img.shields.io/github/stars/rainbowwarmth/GamePush-Plugin?style=social)
+![Star History](https://img.shields.io/github/stars/rainbowwarmth/karin-plugin-gamepush?style=social)
 
 </div>
