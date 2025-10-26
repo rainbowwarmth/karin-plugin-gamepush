@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.7](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.6...v1.0.7) (2025-10-26)
+
+
+### Bug Fixes
+
+* 修改saveFromFrontend方法为异步并优化日志输出 ([e844f08](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/e844f0831a1556366b6612cf0c35d189811b8f22))
+
 ## [1.0.6](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.5...v1.0.6) (2025-10-26)
 
 
