@@ -38,12 +38,12 @@ class Api extends base {
     try {
       const apiUrl = this.gameApis.get(game)
       const data = await request.get(apiUrl, {
-        responseType: "json",
+        responseType: 'json',
         log: true,
         gameName: getGameName(game)
       })
 
-      if (game === "ww") {
+      if (game === 'ww') {
         await this.processWWData(data, game, auto)
       } else {
         await this.processMHYData(data, game, auto)
@@ -70,11 +70,11 @@ class Api extends base {
   async processMainVersion (game: GameKey, currentVersion: any) {
     if (!currentVersion) return
     const { main: redisKey } = getRedisKeys(game)
-    const stored = (await redis.get(redisKey)) || "0.0.0"
+    const stored = (await redis.get(redisKey)) || '0.0.0'
     if (versionComparator.compare(currentVersion, stored) > 0) {
       await redis.set(redisKey, currentVersion)
       notice.pushNotify({
-        type: "main",
+        type: 'main',
         game,
         newVersion: currentVersion,
         oldVersion: stored,
@@ -85,23 +85,23 @@ class Api extends base {
 
   async processPreDownload (game: GameKey, preData: any) {
     const { pre: preKey } = getRedisKeys(game)
-    const currentPre = game === "ww" ? preData?.version : preData?.tag
+    const currentPre = game === 'ww' ? preData?.version : preData?.tag
     const storedPre = await redis.get(preKey)
     if (currentPre) {
       if (currentPre !== storedPre) {
         await redis.set(preKey, currentPre)
         notice.pushNotify({
-          type: "pre",
+          type: 'pre',
           game,
           newVersion: currentPre,
-          oldVersion: storedPre || "0.0.0",
+          oldVersion: storedPre || '0.0.0',
           pushChangeType: config.getGameConfig(game).pushChangeType
         })
       }
     } else if (storedPre) {
       await redis.del(preKey)
       notice.pushNotify({
-        type: "pre-remove",
+        type: 'pre-remove',
         game,
         newVersion: currentPre,
         oldVersion: storedPre,
@@ -117,7 +117,7 @@ class Api extends base {
     }
     for (const pushItem of gameConfig.pushGroups) {
       let botId, groupId
-      if (typeof pushItem === "object") {
+      if (typeof pushItem === 'object') {
         botId = pushItem.botId
         groupId = pushItem.groupId
       }
@@ -125,15 +125,17 @@ class Api extends base {
       if (!bot) {
         return false
       }
-      if (pushChangeType === "1") {
+      if (pushChangeType === '1') {
         return await karin.sendMsg(botId, {
-          scene: "group", peer: groupId,
+          scene: 'group',
+          peer: groupId,
           name: ''
         }, msg)
-      } else if (pushChangeType === "2") {
+      } else if (pushChangeType === '2') {
         const message = segment.text(msg)
         return await karin.sendMsg(botId, {
-          scene: "group", peer: groupId,
+          scene: 'group',
+          peer: groupId,
           name: ''
         }, message)
       }
@@ -141,7 +143,7 @@ class Api extends base {
   }
 
   formatSize (bytes: number) {
-    const units = ["B", "KB", "MB", "GB", "TB"]
+    const units = ['B', 'KB', 'MB', 'GB', 'TB']
     let size = Number(bytes)
     let unitIndex = 0
 

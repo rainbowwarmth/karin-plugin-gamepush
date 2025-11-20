@@ -1,14 +1,15 @@
-import path from "path"
-import fs from "fs"
-import { Sequelize, DataTypes } from "sequelize"
+import path from 'path'
+import fs from 'fs'
+import { Sequelize, DataTypes } from 'sequelize'
 import { common, logger } from 'node-karin'
 import { dir } from '@/components/path'
 import request from '@/components/request'
 
 class GamePushDB {
   REMOTE_VERSION_URL =
-    "https://cnb.cool/rainbowwarmth/resources/-/git/raw/main/GamePush-Plugin-version.json"
-  DB_DOWNLOAD_URL = "https://cnb.cool/rainbowwarmth/resources/-/git/raw/main/GamePush-Plugin.db"
+    'https://cnb.cool/rainbowwarmth/resources/-/git/raw/main/GamePush-Plugin-version.json'
+
+  DB_DOWNLOAD_URL = 'https://cnb.cool/rainbowwarmth/resources/-/git/raw/main/GamePush-Plugin.db'
   DB_DIR: string
   DB_PATH: string
   VERSION_JSON_PATH: string
@@ -18,11 +19,12 @@ class GamePushDB {
   PreModel: any
 
   constructor () {
-    this.DB_DIR = path.join(process.cwd(), "@karinjs/karin-plugin-gamepush/data")
-    this.DB_PATH = path.join(this.DB_DIR, "GamePush-Plugin.db")
-    this.VERSION_JSON_PATH = path.join(this.DB_DIR, "GamePush-Plugin-version.json")
+    this.DB_DIR = path.join(process.cwd(), '@karinjs/karin-plugin-gamepush/data')
+    this.DB_PATH = path.join(this.DB_DIR, 'GamePush-Plugin.db')
+    this.VERSION_JSON_PATH = path.join(this.DB_DIR, 'GamePush-Plugin-version.json')
     this.initPromise = null
   }
+
   async ensureInitialized () {
     return (this.initPromise ??= this.initialize().then(() => true))
   }
@@ -38,10 +40,10 @@ class GamePushDB {
     try {
       logger.debug(`[${dir.name}] 🌐 获取远程版本信息...`)
       const res = await request.get(this.REMOTE_VERSION_URL, {
-        responseType: "json",
+        responseType: 'json',
         log: true
       })
-      if (!res) throw new Error("请求返回空")
+      if (!res) throw new Error('请求返回空')
       logger.debug(`[${dir.name}] ✅ 远程版本: ${res.version}`)
       return res
     } catch (err) {
@@ -77,8 +79,8 @@ class GamePushDB {
       if (dbExists) return true
     }
 
-    let localInfo = versionFileExists
-      ? JSON.parse(fs.readFileSync(this.VERSION_JSON_PATH, "utf8") || "{}")
+    const localInfo = versionFileExists
+      ? JSON.parse(fs.readFileSync(this.VERSION_JSON_PATH, 'utf8') || '{}')
       : {}
 
     const needDownload = !dbExists || (remoteInfo && localInfo.version !== remoteInfo.version)
@@ -88,7 +90,7 @@ class GamePushDB {
       this.saveLocalVersionInfo(
         remoteInfo || {
           ...localInfo,
-          version: localInfo.version + "_local" || `v${new Date().toISOString().slice(0, 10)}`
+          version: localInfo.version + '_local' || `v${new Date().toISOString().slice(0, 10)}`
         }
       )
     }
@@ -105,14 +107,14 @@ class GamePushDB {
   }
 
   initializeModels () {
-    this.MainModel = this.defineModel("main", {
+    this.MainModel = this.defineModel('main', {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
       game: { type: DataTypes.STRING, allowNull: false },
       version: { type: DataTypes.STRING, allowNull: false },
       size: { type: DataTypes.STRING, allowNull: false }
     })
 
-    this.PreModel = this.defineModel("pre", {
+    this.PreModel = this.defineModel('pre', {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
       game: { type: DataTypes.STRING, allowNull: false },
       ver: { type: DataTypes.STRING, allowNull: false },
@@ -125,11 +127,11 @@ class GamePushDB {
     await this.checkDatabase()
 
     this.sequelize = new Sequelize({
-      dialect: "sqlite",
+      dialect: 'sqlite',
       storage: this.DB_PATH,
       logging: false,
       define: { freezeTableName: true, timestamps: false },
-      dialectOptions: { foreign_keys: "ON" }
+      dialectOptions: { foreign_keys: 'ON' }
     })
 
     await this.sequelize.authenticate()
@@ -142,7 +144,7 @@ class GamePushDB {
 
   async storeMainSizeData (game: any, version: any, size: any) {
     await this.ensureInitialized()
-    const [record, created] = await this.MainModel.findOrCreate({
+    const [created] = await this.MainModel.findOrCreate({
       where: { game, version },
       defaults: { size }
     })
@@ -152,12 +154,11 @@ class GamePushDB {
 
   async storePreSizeData (game: any, ver: any, oldver: any, size: any) {
     await this.ensureInitialized()
-    const [record, created] = await this.PreModel.findOrCreate({
+    const [created] = await this.PreModel.findOrCreate({
       where: { game, ver, oldver },
       defaults: { size }
     })
-    if (created)
-      logger.debug(`[${dir.name}] 💾 pre 表新增: ${game}-${ver} | old: ${oldver} | ${size}`)
+    if (created) { logger.debug(`[${dir.name}] 💾 pre 表新增: ${game}-${ver} | old: ${oldver} | ${size}`) }
     return created
   }
 

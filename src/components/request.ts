@@ -1,7 +1,7 @@
 import { logger } from 'node-karin'
-import fetch from "node-fetch"
+import fetch from 'node-fetch'
 
-class request {
+class Request {
   createOptions (
     method: any,
     options: { headers?: Record<string, string>; body?: any } = {}
@@ -18,9 +18,9 @@ class request {
   }
 
   async HandleRequest (response: { json: () => any; text: () => any }, responseType: string) {
-    if (responseType === "raw") return response
+    if (responseType === 'raw') return response
     try {
-      if (responseType === "json") {
+      if (responseType === 'json') {
         return await response.json()
       } else {
         return await response.text()
@@ -32,9 +32,9 @@ class request {
   }
 
   async request (method: string, url: string, options: { body?: any; responseType?: string; headers?: Record<string, string>; log?: boolean; gameName?: string } = {}) {
-    const { body, responseType = "json", headers = {}, log = true, gameName } = options
+    const { body, responseType = 'json', headers = {}, log = true, gameName } = options
     const requestOptions = this.createOptions(method, { body, headers })
-    const gamePrefix = gameName ? `[karin-plugin-gamepush][${gameName}]` : `[karin-plugin-gamepush]`
+    const gamePrefix = gameName ? `[karin-plugin-gamepush][${gameName}]` : '[karin-plugin-gamepush]'
     try {
       if (log) {
         logger.debug(`${gamePrefix} ${method}请求URL:`, url)
@@ -47,7 +47,7 @@ class request {
 
       return await this.HandleRequest(response, responseType)
     } catch (error: any) {
-      const gamePrefix = gameName ? `[karin-plugin-gamepush][${gameName}]` : `[karin-plugin-gamepush]`
+      const gamePrefix = gameName ? `[karin-plugin-gamepush][${gameName}]` : '[karin-plugin-gamepush]'
       if (log) logger.error(`${gamePrefix} ${method}请求失败:`, error.message)
       return false
     }
@@ -62,4 +62,4 @@ class request {
   }
 }
 
-export default new request()
+export default new Request()

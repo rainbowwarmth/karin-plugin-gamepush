@@ -15,7 +15,7 @@ class Download {
    * @param {string} type - 下载类型
    * @returns {Promise<Object>} 下载数据
    */
-  async getDownloadData (game: GameKey, type: string = "main"): Promise<object> {
+  async getDownloadData (game: GameKey, type: string = 'main'): Promise<object> {
     const cacheKey = `${game}-${type}`
     const cached = this.cache.get(cacheKey)
 
@@ -43,12 +43,12 @@ class Download {
 
     try {
       const data = await request.get(apiUrl, {
-        responseType: "json",
+        responseType: 'json',
         log: true,
         gameName: getGameName(game)
       })
 
-      if (game === "ww") {
+      if (game === 'ww') {
         return this.handleWWData(data, type)
       }
       return this.handleMHYData(data, type)
@@ -69,7 +69,7 @@ class Download {
    * @returns {Object} 处理后的下载数据
    */
   handleWWData (data: any, type: string): object {
-    const versionType = type === "pre" ? "predownload" : "default"
+    const versionType = type === 'pre' ? 'predownload' : 'default'
     const versionData = data[versionType]?.config
 
     if (!versionData) {
@@ -81,16 +81,16 @@ class Download {
     }
 
     const cdn =
-      data.cdnList?.[0]?.url?.replace(/\/+$/, "") || "https://pcdownload-huoshan.aki-game.com"
+      data.cdnList?.[0]?.url?.replace(/\/+$/, '') || 'https://pcdownload-huoshan.aki-game.com'
 
-    const mainUrl = `${cdn}/${versionData.indexFile.replace(/^\//, "")}`
+    const mainUrl = `${cdn}/${versionData.indexFile.replace(/^\//, '')}`
 
     const mainMajor = {
       version: versionData.version,
       game_pkgs: [
         {
           url: mainUrl,
-          md5: versionData.indexFileMd5 || "",
+          md5: versionData.indexFileMd5 || '',
           size: versionData.size || 0
         }
       ]
@@ -100,8 +100,8 @@ class Download {
       .sort((a: { version: string }, b: { version: string }) => versionComparator.compare(b.version, a.version))
       .filter((patch: { indexFile: any }) => patch.indexFile)
       .map((patch: { indexFile: string; indexFileMd5: any; size: any; version: any }) => ({
-        url: `${cdn}/${patch.indexFile.replace(/^\//, "")}`,
-        md5: patch.indexFileMd5 || "",
+        url: `${cdn}/${patch.indexFile.replace(/^\//, '')}`,
+        md5: patch.indexFileMd5 || '',
         size: patch.size || 0,
         version: patch.version
       }))
@@ -126,7 +126,7 @@ class Download {
       return patchArray?.[0] || { game_pkgs: [], audio_pkgs: [] }
     }
 
-    if (type === "pre") {
+    if (type === 'pre') {
       const preData = packageData?.pre_download?.major || {}
       const prePatch = safeGetPatch(packageData?.pre_download?.patches)
 
@@ -158,39 +158,39 @@ class Download {
   formatDownloadInfo (game: GameKey, data: any, type: string, patch: any): object {
     const gameName = getGameName(game)
     const { version } = data
-    const typeText = type === "pre" ? "预下载" : "正式版"
+    const typeText = type === 'pre' ? '预下载' : '正式版'
 
     const msg = [
       `${gameName} ${typeText}下载信息`,
       `版本: ${version}`,
-      "请选择需要的下载内容"
-    ].join("\n")
+      '请选择需要的下载内容'
+    ].join('\n')
 
     const client = this.formatPackageInfo(
       data.game_pkgs,
-      `${gameName} ${typeText}${game === "bh3" ? "游戏下载" : "游戏分卷包下载"}`,
-      `${game === "bh3" ? "游戏下载" : "游戏分卷包下载"}`
+      `${gameName} ${typeText}${game === 'bh3' ? '游戏下载' : '游戏分卷包下载'}`,
+      `${game === 'bh3' ? '游戏下载' : '游戏分卷包下载'}`
     )
 
     const audio = this.formatPackageInfo(
       data.audio_pkgs,
       `${gameName} ${typeText}音频下载`,
-      "音频包"
+      '音频包'
     )
 
-    const patch_client = this.formatPackageInfo(
+    const PatchClient = this.formatPackageInfo(
       patch?.game_pkgs,
       `${gameName} ${typeText}游戏增量包下载`,
-      "游戏增量包"
+      '游戏增量包'
     )
 
-    const patch_audio = this.formatPackageInfo(
+    const PatchAudio = this.formatPackageInfo(
       patch?.audio_pkgs,
       `${gameName} ${typeText}音频增量包下载`,
-      "音频增量包"
+      '音频增量包'
     )
 
-    return { msg, client, audio, patch_client, patch_audio }
+    return { msg, client, audio, PatchClient, PatchAudio }
   }
 
   /**
@@ -208,11 +208,11 @@ class Download {
     const items = pkgs.map((pkg, index) => {
       const size = api.formatSize(pkg.size || 0)
       const name = pkg.language ? `${pkg.language}${type}` : `${type}${index + 1}`
-      const version = pkg.version ? ` (${pkg.version})` : ""
+      const version = pkg.version ? ` (${pkg.version})` : ''
       return `${name}${version}: ${pkg.url}\n大小: ${size}`
     })
 
-    return `${title}\n${items.join("\n\n")}`
+    return `${title}\n${items.join('\n\n')}`
   }
 }
 
