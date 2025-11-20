@@ -1,6 +1,6 @@
 {
   "name": "karin-plugin-gamepush",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "author": "rainbowwarmth",
   "type": "module",
   "description": "自动监控游戏版本更新并推送通知",
