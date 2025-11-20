@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.10](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.9...v1.0.10) (2025-11-20)
+
+
+### Features
+
+* 更新游戏版本监控逻辑，优化错误处理，添加默认游戏配置 ([115347b](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/115347bddcde4bed52f59e191fde892c047805b6))
+
 ## [1.0.9](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.8...v1.0.9) (2025-11-20)
 
 
