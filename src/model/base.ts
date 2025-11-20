@@ -33,7 +33,7 @@ export default class base {
     const basic = {
       imgType: 'jpeg',
       tplFile: `${dir.pluginDir}/resources/html/GamePush-Plugin/GamePush-Plugin-${html}.html`,
-      fontsPath: `${dir.pluginDir}/resources/fonts/`,
+      fontsPath: `${dir.ResourcesDir}/fonts/`,
       pluResPath: `${dir.pluginDir}/resources/`,
       htmlSavePath: `${dir.pluginDir}/@karinjs/karin-plugin-GamePush/html/`,
       plugin: {

@@ -2,10 +2,11 @@ import fs from 'fs'
 import path from 'path'
 import YAML from 'yaml'
 import chokidar, { FSWatcher } from 'chokidar'
-import { logger } from 'node-karin'
+import { common, logger } from 'node-karin'
 import { gameIds, getGameName } from '@/model/util'
 
 const CONFIG_DIR = path.join(process.cwd(), '@karinjs/karin-plugin-gamepush/config')
+const fonts = path.join(process.cwd(), '@karinjs/karin-plugin-gamepush/resources/fonts')
 const CONFIG_PATH = path.join(CONFIG_DIR, 'GamePush-Plugin.yaml')
 const DEFAULT_CRON = '0 0/5 * * * *'
 
@@ -18,6 +19,9 @@ class Config {
 
   init () {
     if (!fs.existsSync(CONFIG_DIR)) fs.mkdirSync(CONFIG_DIR, { recursive: true })
+    if (!fs.existsSync(fonts)) fs.mkdirSync(fonts, { recursive: true })
+    this.checkAndDownloadFonts()
+    if (!fs.existsSync(CONFIG_DIR)) fs.mkdirSync(CONFIG_DIR, { recursive: true })
     if (!fs.existsSync(CONFIG_PATH)) this.saveConfig(this.getDefaultConfig())
     this.loadConfig()
     this.setupWatcher()
@@ -26,6 +30,34 @@ class Config {
   catch (error: unknown) {
     logger.error('[karin-plugin-gamepush] 配置初始化失败', error)
     this.configCache = this.getDefaultConfig()
+  }
+
+  async checkAndDownloadFonts () {
+    const fontFiles = [
+      {
+        name: 'HYWenHei-55W.ttf',
+        url: 'https://cnb.cool/rainbowwarmth/resources/-/git/raw/main/GamePush-resources/HYWenHei-55W.ttf'
+      },
+      {
+        name: 'NotoColorEmoji.ttf',
+        url: 'https://cnb.cool/rainbowwarmth/resources/-/git/raw/main/GamePush-resources/NotoColorEmoji.ttf'
+      }
+    ]
+
+    for (const font of fontFiles) {
+      const fontPath = path.join(fonts, font.name)
+      if (!fs.existsSync(fontPath)) {
+        try {
+          logger.mark(`[karin-plugin-gamepush] 检测到字体缺失，开始下载: ${font.name}`)
+          await common.downFile(font.url, fontPath)
+          logger.mark(`[karin-plugin-gamepush] 字体下载完成: ${font.name}`)
+        } catch (err) {
+          logger.error(`[karin-plugin-gamepush] 字体下载失败: ${font.name}`, err)
+        }
+      } else {
+        logger.debug(`[karin-plugin-gamepush] 字体文件已存在: ${font.name}`)
+      }
+    }
   }
 
   getDefaultConfig () {
