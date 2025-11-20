@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.11](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.10...v1.0.11) (2025-11-20)
+
+
+### Features
+
+* 删除插件保留字体 ([3ccfd7c](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/3ccfd7c912674994ecc351f4246344796e02fde0))
+* 外置下载字体减负npm包 ([5c4a74e](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/5c4a74e61ca3ddc58f016e8810ec9e750d52cd3a))
+
 ## [1.0.10](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.9...v1.0.10) (2025-11-20)
 
 
