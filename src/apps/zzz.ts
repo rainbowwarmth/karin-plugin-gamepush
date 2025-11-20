@@ -55,8 +55,8 @@ export const zzzVer = karin.command(`^#*${zzzReg}当前版本$`, async (e) => {
 export const zzzDownloadLinks = karin.command(`^#*${zzzReg}获取下载链接$`, async (e) => {
   try {
     const { data, patch } = await download.getDownloadData('zzz', 'main') as {
-      data: string,
-      patch: string
+      data: GamePatch,
+      patch: GamePatch
     }
     if (!data) return e.reply('当前没有可用的正式版本下载', { reply: true })
     const { msg, client, PatchClient } = download.formatDownloadInfo('zzz', data, 'main', patch) as {
@@ -79,8 +79,8 @@ export const zzzDownloadLinks = karin.command(`^#*${zzzReg}获取下载链接$`,
 export const zzzPreDownloadLinks = karin.command(`^#*${zzzReg}获取预下载链接$`, async (e) => {
   try {
     const { data, patch } = await download.getDownloadData('zzz', 'pre') as {
-      data: string,
-      patch: string
+      data: GamePatch,
+      patch: GamePatch
     }
     if (!data) return e.reply('🚫 绝区零当前未开放预下载', { reply: true })
     const { msg, client, PatchClient } = download.formatDownloadInfo('zzz', data, 'pre', patch) as {

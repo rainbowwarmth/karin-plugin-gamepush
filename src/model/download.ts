@@ -154,7 +154,7 @@ class Download {
    * @param {Object} patch - 补丁数据
    * @returns {Object} 格式化后的下载信息
    */
-  formatDownloadInfo (game: GameKey, data: any, type: string, patch: any): object {
+  formatDownloadInfo (game: GameKey, data: GamePatch, type: string, patch: GamePatch): object {
     const gameName = getGameName(game)
     const { version } = data
     const typeText = type === 'pre' ? '预下载' : '正式版'

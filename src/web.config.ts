@@ -3,19 +3,14 @@ import { gameIds, getGameName } from '@/model/util'
 import cfg from '@/components/config'
 import { dir } from '@/components/path'
 
-interface GameConfigItem {
-  enable?: boolean
-  log?: boolean
-  cron?: string
-  pushGroups?: Array<string | { botId: string; groupId: string }>
-  pushChangeType?: string,
-  html?: string
+const defaultGameConfig: GameConfig = {
+  enable: true,
+  log: true,
+  cron: '0 0/5 * * * *',
+  pushGroups: [],
+  pushChangeType: '1',
+  html: 'default'
 }
-
-interface FrontendConfig {
-  [key: string]: GameConfigItem[]
-}
-
 export default defineConfig({
   info: {
     id: 'karin-plugin-gamepush',
@@ -38,7 +33,7 @@ export default defineConfig({
 
     return (gameIds as GameKey[]).map(gameId => {
       const gameConfigArray = currentConfig[gameId] || []
-      const gameConfig = gameConfigArray.length > 0 ? gameConfigArray[0] : {}
+      const gameConfig = gameConfigArray.length > 0 ? gameConfigArray[0] : defaultGameConfig
       const gameName = getGameName(gameId)
 
       const pushGroupsAsString = (gameConfig.pushGroups || []).map((item) => {
@@ -57,12 +52,12 @@ export default defineConfig({
               components.switch.create('enable', {
                 label: '启用推送',
                 defaultSelected: gameConfig.enable !== undefined ? gameConfig.enable : true,
-                description: `是否启用${gameName}的游戏更新推送`
+                description: `是否启用${gameName}的版本更新推送`
               }),
               components.switch.create('log', {
                 label: '启用日志',
                 defaultSelected: gameConfig.log !== undefined ? gameConfig.log : true,
-                description: `是否启用${gameName}的游戏日志显示`
+                description: `是否启用${gameName}的版本更新推送日志显示`
               }),
               components.input.string('cron', {
                 label: '定时推送表达式',
@@ -124,7 +119,7 @@ export default defineConfig({
   },
 
   save: async (config: any) => {
-    const saveData: Record<string, GameConfigItem[]> = {}
+    const saveData: Record<string, GameConfig[]> = {}
 
     gameIds.forEach((gameId) => {
       const gameSettings = config[gameId] || []

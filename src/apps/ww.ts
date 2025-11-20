@@ -55,8 +55,8 @@ export const wwVer = karin.command(`^#*${wwReg}当前版本$`, async (e) => {
 export const wwDownloadLinks = karin.command(`^#*${wwReg}获取下载链接$`, async (e) => {
   try {
     const { data, patch } = await download.getDownloadData('ww', 'main') as {
-      data: string,
-      patch: string
+      data: GamePatch,
+      patch: GamePatch
     }
     if (!data) return e.reply('当前没有可用的正式版本下载', { reply: true })
     const { msg, client, PatchClient } = download.formatDownloadInfo('ww', data, 'main', patch) as {
@@ -79,8 +79,8 @@ export const wwDownloadLinks = karin.command(`^#*${wwReg}获取下载链接$`, a
 export const wwPreDownloadLinks = karin.command(`^#*${wwReg}获取预下载链接$`, async (e) => {
   try {
     const { data, patch } = await download.getDownloadData('ww', 'pre') as {
-      data: string,
-      patch: string
+      data: GamePatch,
+      patch: GamePatch
     }
     if (!data) return e.reply('🚫 鸣潮当前未开放预下载', { reply: true })
     const { msg, client, PatchClient } = download.formatDownloadInfo('ww', data, 'pre', patch) as {

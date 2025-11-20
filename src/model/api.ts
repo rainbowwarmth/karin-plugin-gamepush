@@ -24,8 +24,9 @@ class Api extends base {
       if (gameConfig.enable) {
         await this.checkVersion(true, game)
       }
-    } catch (err: any) {
-      logger.error(`[karin-plugin-gamepush][${getGameName(game)}自动检查] 失败`, err)
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err))
+      logger.error(`[karin-plugin-gamepush][${getGameName(game)}自动检查] 失败`, error)
     }
   }
 
@@ -46,9 +47,10 @@ class Api extends base {
       } else {
         await this.processMHYData(data, game, auto)
       }
-    } catch (err: any) {
-      logger.error(`[karin-plugin-gamepush][${getGameName(game)}版本监控] 错误`, err)
-      if (!auto) this.e.reply(`[karin-plugin-gamepush] ❌ 检查失败：${err.message}`)
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err))
+      logger.error(`[karin-plugin-gamepush][${getGameName(game)}版本监控] 错误`, error)
+      if (!auto) this.e.reply(`[karin-plugin-gamepush] ❌ 检查失败：${error.message}`)
     }
   }
 

@@ -1,0 +1,80 @@
+{
+  "name": "karin-plugin-gamepush",
+  "version": "1.0.8",
+  "author": "rainbowwarmth",
+  "type": "module",
+  "description": "自动监控游戏版本更新并推送通知",
+  "homepage": "https://github.com/rainbowwarmth/karin-plugin-gamepush",
+  "keywords": [
+    "karin-plugin",
+    "karin"
+  ],
+  "license": "MIT License",
+  "bugs": {
+    "url": "https://github.com/rainbowwarmth/karin-plugin-gamepush/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rainbowwarmth/karin-plugin-gamepush.git"
+  },
+  "scripts": {
+    "app": "node lib/app.js",
+    "build": "tsup",
+    "dev": "cross-env EBV_FILE=\"development.env\" node --import tsx src/app.ts",
+    "pub": "npm publish --access public"
+  },
+  "main": "lib/index.js",
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/lodash": "^4.17.16",
+    "@types/node": "^20.17.8",
+    "@types/node-fetch": "^2.6.13",
+    "@types/sequelize": "^6.12.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.7.0",
+    "neostandard": "^0.11.9",
+    "node-karin": "^1.10.23",
+    "tsup": "^8.5.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.5.3",
+    "@karinjs/plugin-puppeteer": "^1.0.17"
+  },
+  "karin": {
+    "main": "src/index.ts",
+    "ts-web": "src/web.config.ts",
+    "web": "lib/web.config.js",
+    "apps": [
+      "lib/apps"
+    ],
+    "ts-apps": [
+      "src/apps"
+    ],
+    "static": [
+      "resources"
+    ],
+    "files": [
+      "config",
+      "data",
+      "resources"
+    ]
+  },
+  "files": [
+    "/lib/**/*.js",
+    "/lib/**/*.d.ts",
+    "/config/*.json",
+    "resources",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "dependencies": {
+    "chokidar": "^4.0.3",
+    "node-fetch": "^3.3.2",
+    "sequelize": "^6.37.7",
+    "yaml": "^2.8.1"
+  }
+}
