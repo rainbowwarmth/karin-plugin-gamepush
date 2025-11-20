@@ -131,3 +131,5 @@ build
 .idea
 *.sln
 *.suo
+
+@karinjs

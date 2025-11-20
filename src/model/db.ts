@@ -58,7 +58,7 @@ class GamePushDB {
     await common.downFile(this.DB_DOWNLOAD_URL, this.DB_PATH)
   }
 
-  saveLocalVersionInfo (info: { version: any }) {
+  saveLocalVersionInfo (info: { version: string }) {
     try {
       fs.writeFileSync(this.VERSION_JSON_PATH, JSON.stringify(info, null, 2))
       logger.debug(`[${dir.name}] 💾 本地版本已更新: ${info.version}`)
@@ -142,7 +142,7 @@ class GamePushDB {
     logger.debug(`[${dir.name}] ✅ 数据库模型同步完成`)
   }
 
-  async storeMainSizeData (game: any, version: any, size: any) {
+  async storeMainSizeData (game: GameKey, version: string, size: string) {
     await this.ensureInitialized()
     const [created] = await this.MainModel.findOrCreate({
       where: { game, version },
@@ -152,7 +152,7 @@ class GamePushDB {
     return created
   }
 
-  async storePreSizeData (game: any, ver: any, oldver: any, size: any) {
+  async storePreSizeData (game: GameKey, ver: string, oldver: string, size: string) {
     await this.ensureInitialized()
     const [created] = await this.PreModel.findOrCreate({
       where: { game, ver, oldver },
@@ -168,9 +168,9 @@ class GamePushDB {
    * @param {string} [version] - 可选，指定版本号
    * @returns {Promise<Array>} 返回匹配的数据记录
    */
-  async getMainData (game: any, version = null) {
+  async getMainData (game: GameKey, version = null) {
     await this.ensureInitialized()
-    const where: { game: any; version?: any } = { game }
+    const where: { game: GameKey; version?: string } = { game }
     if (version !== null && version !== undefined) {
       where.version = version
     }
@@ -183,7 +183,7 @@ class GamePushDB {
    * @param {string} [ver] - 可选，指定预下载版本号
    * @returns {Promise<Array>} 返回匹配的数据记录
    */
-  async getPreData (game: any, ver = null) {
+  async getPreData (game: GameKey, ver = null) {
     await this.ensureInitialized()
     return this.PreModel.findAll({ where: ver ? { game, ver } : { game } })
   }

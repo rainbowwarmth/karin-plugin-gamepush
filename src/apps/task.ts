@@ -3,8 +3,6 @@ import api from '@/model/api'
 import { gameIds, getGameName } from '@/model/util'
 import karin, { logger } from 'node-karin'
 
-type GameKey = 'sr' | 'ys' | 'zzz' | 'bh3' | 'ww'
-
 const tasks = gameIds.map((gameId) => {
   const name = `${getGameName(gameId as GameKey)}版本监控`
   const cron = config.getGameConfig(gameId)?.cron || '0 0/5 * * * *'

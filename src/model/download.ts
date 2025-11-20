@@ -3,8 +3,6 @@ import api from '@/model/api'
 import { getGameAPI, getGameName, versionComparator } from '@/model/util'
 import { logger } from 'node-karin'
 
-type GameKey = 'sr' | 'ys' | 'zzz' | 'bh3' | 'ww'
-
 class Download {
   cache = new Map()
   cacheTTL = 30000
@@ -48,12 +46,14 @@ class Download {
         gameName: getGameName(game)
       })
 
+      console.log(data)
       if (game === 'ww') {
         return this.handleWWData(data, type)
       }
       return this.handleMHYData(data, type)
-    } catch (err: any) {
-      logger.error(`[karin-plugin-gamepush] 获取下载数据失败: ${err.message}`)
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err)
+      logger.error(`[karin-plugin-gamepush] 获取下载数据失败: ${message}`)
       return {
         data: null,
         patch: { game_pkgs: [], audio_pkgs: [] },
@@ -68,7 +68,7 @@ class Download {
    * @param {string} type - 下载类型
    * @returns {Object} 处理后的下载数据
    */
-  handleWWData (data: any, type: string): object {
+  handleWWData (data: WwGameData, type: string): object {
     const versionType = type === 'pre' ? 'predownload' : 'default'
     const versionData = data[versionType]?.config
 
@@ -81,7 +81,7 @@ class Download {
     }
 
     const cdn =
-      data.cdnList?.[0]?.url?.replace(/\/+$/, '') || 'https://pcdownload-huoshan.aki-game.com'
+      data.default.cdnList?.[0]?.url?.replace(/\/+$/, '') || 'https://pcdownload-huoshan.aki-game.com'
 
     const mainUrl = `${cdn}/${versionData.indexFile.replace(/^\//, '')}`
 
@@ -98,8 +98,8 @@ class Download {
 
     const patchPkgs = (versionData.patchConfig || [])
       .sort((a: { version: string }, b: { version: string }) => versionComparator.compare(b.version, a.version))
-      .filter((patch: { indexFile: any }) => patch.indexFile)
-      .map((patch: { indexFile: string; indexFileMd5: any; size: any; version: any }) => ({
+      .filter((patch: { indexFile: string }) => patch.indexFile)
+      .map((patch: { indexFile: string; indexFileMd5: string; size: string | number; version: string }) => ({
         url: `${cdn}/${patch.indexFile.replace(/^\//, '')}`,
         md5: patch.indexFileMd5 || '',
         size: patch.size || 0,

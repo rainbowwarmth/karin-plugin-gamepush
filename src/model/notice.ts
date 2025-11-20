@@ -153,12 +153,13 @@ class Notifier extends base {
       } else {
         await this.sendTextMessage(type, game, gameConfig, templateData, pushChangeType)
       }
-    } catch (err: any) {
-      logger.error(`[karin-plugin-gamepush][${this.getGameName(game)}推送通知] 失败`, err)
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err))
+      logger.error(`[karin-plugin-gamepush][${this.getGameName(game)}推送通知] 失败`, error)
     }
   }
 
-  async fetchSizeInfo (game: GameKey, type: any, gameName: string) {
+  async fetchSizeInfo (game: GameKey, type: string, gameName: string) {
     const excludedLanguages = ['en-us', 'ja-jp', 'ko-kr']
     let formattedTotalSize; let incrementalSize; let Ver; let buildSize = 0; let patchSize = 0
     const BranchesData = await request.get(getGameChuckAPI(game), {
@@ -227,7 +228,7 @@ class Notifier extends base {
     return { formattedTotalSize, incrementalSize, Ver }
   }
 
-  async sendImageMessage (type: string | undefined, game: GameKey, gameConfig: { enable: boolean; log: boolean; cron: string; pushGroups: any[]; pushChangeType: string, html: string }, templateData: { gameName: string; oldVersion: string; newVersion: string; Ver: any; formattedTotalSize: string; incrementalSize: string }, pushChangeType: string, html: string) {
+  async sendImageMessage (type: string | undefined, game: GameKey, gameConfig: GameConfig, templateData: templateData, pushChangeType: string, html: string) {
     const screenData = await this.screenData(game, type, html)
     const data = {
       name: 'karin-plugin-gamepush',
@@ -250,13 +251,14 @@ class Notifier extends base {
       : logger.error('[karin-plugin-gamepush] 发送图片消息失败')
   }
 
-  async sendTextMessage (type: string, game: GameKey, gameConfig: { enable: boolean; log: boolean; cron: string; pushGroups: any[]; pushChangeType: string }, templateData: { gameName: string; oldVersion: string; newVersion: string; Ver: any; formattedTotalSize: string; incrementalSize: string }, pushChangeType: string) {
+  async sendTextMessage (type: string, game: GameKey, gameConfig: GameConfig, templateData: templateData, pushChangeType: string) {
     try {
       const template = this.TemplateMap[type]
       if (!template) throw new Error(`未知推送类型: ${type}`)
       api.sendToGroups(template(templateData), game, gameConfig, pushChangeType)
-    } catch (err: any) {
-      logger.error(`[karin-plugin-gamepush] 发送文本消息失败: ${err.message}`, err)
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err : new Error(String(err))
+      logger.error(`[karin-plugin-gamepush] 发送文本消息失败: ${error.message}`, error)
     }
   }
 }

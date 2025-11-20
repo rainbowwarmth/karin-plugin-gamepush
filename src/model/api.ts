@@ -54,20 +54,20 @@ class Api extends base {
     }
   }
 
-  async processWWData (data: any, game: GameKey, auto: boolean) {
+  async processWWData (data: WwGameData, game: GameKey, auto: boolean) {
     const gameCheckData = data
     await this.processMainVersion(game, gameCheckData.default?.config?.version)
     await this.processPreDownload(game, gameCheckData.predownload?.config)
   }
 
-  async processMHYData (data: any, game: GameKey, auto: boolean) {
+  async processMHYData (data: mhyData, game: GameKey, auto: boolean) {
     const gameCheckData = data?.data?.game_branches?.[0]
     if (!gameCheckData) throw new Error(`[karin-plugin-gamepush] ${getGameName(game)}游戏数据解析失败`)
     await this.processMainVersion(game, gameCheckData.main?.tag)
     await this.processPreDownload(game, gameCheckData.pre_download)
   }
 
-  async processMainVersion (game: GameKey, currentVersion: any) {
+  async processMainVersion (game: GameKey, currentVersion: string) {
     if (!currentVersion) return
     const { main: redisKey } = getRedisKeys(game)
     const stored = (await redis.get(redisKey)) || '0.0.0'
@@ -110,17 +110,13 @@ class Api extends base {
     }
   }
 
-  async sendToGroups (msg: any, game: GameKey, gameConfig: any, pushChangeType: any) {
+  async sendToGroups (msg: any, game: GameKey, gameConfig: GameConfig, pushChangeType: string) {
     if (!gameConfig?.pushGroups?.length) {
       logger.debug(`[karin-plugin-gamepush][${getGameName(game)}] 未配置推送群组`)
       return
     }
     for (const pushItem of gameConfig.pushGroups) {
-      let botId, groupId
-      if (typeof pushItem === 'object') {
-        botId = pushItem.botId
-        groupId = pushItem.groupId
-      }
+      const { botId, groupId } = pushItem as PushGroup
       const bot = karin.getBot(botId)
       if (!bot) {
         return false

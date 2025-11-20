@@ -107,9 +107,9 @@ export const wwVersionData = karin.command(`^#*${wwReg}版本数据(.*)$`, async
       const mainVersions = await (await db).getMainData('ww')
       const preVersions = await (await db).getPreData('ww')
       if ((!mainVersions || mainVersions.length === 0) && (!preVersions || preVersions.length === 0)) {
-        return e.reply('暂无原神版本数据', { reply: true })
+        return e.reply('暂无鸣朝版本数据', { reply: true })
       }
-      let message = '📊 原神历史版本数据：\n'
+      let message = '📊 鸣朝历史版本数据：\n'
       if (mainVersions && mainVersions.length > 0) {
         message += '\n📦 正式版本：\n'
         message += mainVersions
@@ -133,10 +133,10 @@ export const wwVersionData = karin.command(`^#*${wwReg}版本数据(.*)$`, async
     const preVersion = await (await db).getPreData('ww', input as any)
 
     if ((!mainVersion || mainVersion.length === 0) && (!preVersion || preVersion.length === 0)) {
-      return e.reply(`未找到原神版本 ${input} 的数据`, { reply: true })
+      return e.reply(`未找到鸣朝版本 ${input} 的数据`, { reply: true })
     }
 
-    let message = `📊 原神版本 ${input} 数据：\n`
+    let message = `📊 鸣朝版本 ${input} 数据：\n`
 
     if (mainVersion && mainVersion.length > 0) {
       const record = mainVersion[0]

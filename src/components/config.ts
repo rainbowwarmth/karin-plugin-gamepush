@@ -172,7 +172,7 @@ class Config {
     return frontendConfig
   }
 
-  parseFrontendConfig (data: any): { [key: string]: GameConfig } {
+  parseFrontendConfig (data:any): { [key: string]: GameConfig } {
     const saveData: { [key: string]: GameConfig } = {}
     for (const gameId of gameIds) {
       const cfg = (data[gameId] || [])[0] || {}

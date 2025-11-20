@@ -13,3 +13,16 @@ interface GameConfig {
 }
 
 type GameKey = 'sr' | 'ys' | 'zzz' | 'bh3' | 'ww'
+
+interface FrontendConfig {
+  [key: string]: GameConfig[]
+}
+
+interface templateData {
+  gameName: string;
+  oldVersion: string;
+  newVersion: string;
+  Ver: string;
+  formattedTotalSize: string;
+  incrementalSize: string;
+}

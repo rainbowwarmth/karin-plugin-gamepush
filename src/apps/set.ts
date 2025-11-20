@@ -140,7 +140,7 @@ function getMatchGameId (msg: string) {
   return null
 }
 
-function buildReg (action: any) {
+function buildReg (action: string) {
   const allPatterns = Object.values(gameRegexMap)
     .map((r) => r.source)
     .join('|')

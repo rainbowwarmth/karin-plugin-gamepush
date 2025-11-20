@@ -2,8 +2,6 @@ import { dir } from '@/components/path'
 import { GAME_CONFIG, getGameIcon } from './util'
 import request from '@/components/request'
 
-type GameKey = 'sr' | 'ys' | 'zzz' | 'bh3' | 'ww'
-
 export default class base {
   getGameName (game: GameKey) {
     const gameNames: Record<GameKey, string> = {

@@ -11,7 +11,7 @@ export const srCheck = karin.command(`^#*${srReg}版本监控$`, async (e) => {
   await api.checkVersion(true, 'sr')
   return e.reply('✅ 已执行手动检查', { reply: true })
 }, {
-  name: 'GmaePush-鸣潮版本监控',
+  name: 'GmaePush-星铁版本监控',
   priority: 100,
   event: 'message',
   permission: 'master'
@@ -28,9 +28,9 @@ export const srPushSet = karin.command(`^#*${srReg}(开启|关闭)版本推送$`
     config.removePushGroup('sr', botId, groupId)
   }
   const action = isEnable ? `已添加本群到推送列表（ID：${groupId}）` : `已移除本群推送（ID：${groupId}）`
-  return e.reply(`✅ 已${isEnable ? '开启' : '关闭'}鸣潮版本推送，${action}`, { reply: true })
+  return e.reply(`✅ 已${isEnable ? '开启' : '关闭'}星铁版本推送，${action}`, { reply: true })
 }, {
-  name: 'GmaePush-鸣潮版本推送设置',
+  name: 'GmaePush-星铁版本推送设置',
   priority: 100,
   event: 'message',
   permission: 'master'
@@ -40,13 +40,13 @@ export const srVer = karin.command(`^#*${srReg}当前版本$`, async (e) => {
   const { main, pre } = getRedisKeys('sr')
   const [mainVer, preVer] = await Promise.all([redis.get(main), redis.get(pre)])
   const msg = [
-    '📌 鸣潮当前版本信息',
+    '📌 星铁当前版本信息',
     `正式版本：${mainVer || '未知'}`,
     `预下载版本：${preVer || '未开启'}`
   ].join('\n')
   return e.reply(msg, { reply: true })
 }, {
-  name: 'GamePush-鸣潮当前版本',
+  name: 'GamePush-星铁当前版本',
   priority: 100,
   event: 'message',
   permission: 'all'
@@ -70,7 +70,7 @@ export const srDownloadLinks = karin.command(`^#*${srReg}获取下载链接$`, a
     e.reply(`删除失败: ${msg}`)
   }
 }, {
-  name: 'GamePush-鸣潮下载链接',
+  name: 'GamePush-星铁下载链接',
   priority: 100,
   event: 'message',
   permission: 'all'
@@ -82,7 +82,7 @@ export const srPreDownloadLinks = karin.command(`^#*${srReg}获取预下载链�
       data: string,
       patch: string
     }
-    if (!data) return e.reply('🚫 鸣潮当前未开放预下载', { reply: true })
+    if (!data) return e.reply('🚫 星铁当前未开放预下载', { reply: true })
     const { msg, client, PatchClient } = download.formatDownloadInfo('sr', data, 'pre', patch) as {
       msg: string,
       client: string,
@@ -94,7 +94,7 @@ export const srPreDownloadLinks = karin.command(`^#*${srReg}获取预下载链�
     e.reply(`删除失败: ${msg}`)
   }
 }, {
-  name: 'GamePush-鸣潮预下载链接',
+  name: 'GamePush-星铁预下载链接',
   priority: 100,
   event: 'message',
   permission: 'all'
