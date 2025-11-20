@@ -7,98 +7,50 @@ import download from '@/model/download'
 import api from '@/model/api'
 import db from '@/model/db'
 
-type GameKey = 'sr' | 'ys' | 'zzz' | 'bh3' | 'ww'
-
 class Notifier extends base {
-  TemplateMap: {
-    [key: string]: (data: any) => string
+  TemplateMap: TemplateMap = {
     main: ({
       gameName,
       oldVersion,
       newVersion,
       formattedTotalSize,
       incrementalSize
-    }: {
-      gameName: string
-      oldVersion: string
-      newVersion: string
-      formattedTotalSize?: string
-      incrementalSize?: string
-    }) => string
+    }: Templatemain) =>
+      [
+      `✨${gameName}游戏版本更新通知`,
+      `🚀版本变更：${oldVersion} → ${newVersion}`,
+      formattedTotalSize && `📦完整大小（含中文语音）：${formattedTotalSize}`,
+      incrementalSize && `🔄 增量更新大小：约${incrementalSize}`,
+      '📢 请及时更新客户端',
+      ...(gameName !== '原神'
+        ? [`💾 发送【#${gameName}获取下载链接】获取客户端`]
+        : [])
+      ]
+        .filter(Boolean)
+        .join('\n'),
+
     pre: ({
       gameName,
       newVersion,
       formattedTotalSize,
       incrementalSize
-    }: {
-      gameName: string
-      newVersion: string
-      formattedTotalSize?: string
-      incrementalSize?: string
-    }) => string
-    'pre-remove': ({
-      gameName,
-      oldVersion
-    }: {
-      gameName: string
-      oldVersion: string
-    }) => string
-  } = {
-      main: ({
-        gameName,
-        oldVersion,
-        newVersion,
-        formattedTotalSize,
-        incrementalSize
-      }: {
-        gameName: string
-        oldVersion: string
-        newVersion: string
-        formattedTotalSize?: string
-        incrementalSize?: string
-      }) =>
-        [
-          `✨${gameName}游戏版本更新通知`,
-          `🚀版本变更：${oldVersion} → ${newVersion}`,
-          formattedTotalSize && `📦完整大小（含中文语音）：${formattedTotalSize}`,
-          incrementalSize && `🔄 增量更新大小：约${incrementalSize}`,
-          '📢 请及时更新客户端',
-          ...(gameName !== '原神' ? [`💾 发送【#${gameName}获取下载链接】获取客户端`] : [])
-        ]
-          .filter(Boolean)
-          .join('\n'),
+    }: Templatepre) =>
+      [
+      `🎁${gameName}预下载资源已开放`,
+      `📦新版本：${newVersion}`,
+      formattedTotalSize && `📦 完整大小（含中文语音）：${formattedTotalSize}`,
+      incrementalSize && `🔄 增量更新大小：约${incrementalSize}`,
+      '📥请提前下载游戏资源',
+      ...(gameName !== '原神'
+        ? [`💾 发送【#${gameName}获取下载链接】获取客户端`]
+        : [])
+      ]
+        .filter(Boolean)
+        .join('\n'),
 
-      pre: ({
-        gameName,
-        newVersion,
-        formattedTotalSize,
-        incrementalSize
-      }: {
-        gameName: string
-        newVersion: string
-        formattedTotalSize?: string
-        incrementalSize?: string
-      }) =>
-        [
-          `🎁${gameName}预下载资源已开放`,
-          `📦新版本：${newVersion}`,
-          formattedTotalSize && `📦 完整大小（含中文语音）：${formattedTotalSize}`,
-          incrementalSize && `🔄 增量更新大小：约${incrementalSize}`,
-          '📥请提前下载游戏资源',
-          ...(gameName !== '原神' ? [`💾 发送【#${gameName}获取下载链接】获取客户端`] : [])
-        ]
-          .filter(Boolean)
-          .join('\n'),
-
-      'pre-remove': ({
-        gameName,
-        oldVersion
-      }: {
-        gameName: string
-        oldVersion: string
-      }) =>
-        `🌙${gameName}预下载资源已关闭\n🔒正式版本${oldVersion}即将上线`
-    }
+    'pre-remove': ({ gameName, oldVersion }: TemplatepreRemove) =>
+    `🌙${gameName}预下载资源已关闭\n🔒正式版本${oldVersion}即将上线`
+  }
 
   async pushNotify ({
     type,
