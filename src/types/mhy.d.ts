@@ -51,3 +51,63 @@ interface mhyData {
     game_branches: RootConfig[]
   }
 }
+
+interface GamePackageResponse {
+  retcode: number;
+  message: string;
+  data: GamePackageData;
+}
+
+interface GamePackageData {
+  game_packages: GamePackageItem[];
+}
+
+interface GamePackageItem {
+  game: {
+    id: string;
+    biz: string;
+  };
+  main: GameMainSection;
+  pre_download: GamePreDownloadSection;
+}
+
+interface GameMainSection {
+  major: GameMajorVersion | null;
+  patches: GamePatch[];
+  required_client_version: string;
+}
+
+interface GamePreDownloadSection {
+  major: GameMajorVersion | null;
+  patches: GamePatch[];
+  required_client_version: string;
+}
+
+interface GameMajorVersion {
+  version: string;
+  game_pkgs: GameFilePackage[];
+  audio_pkgs: GameAudioPackage[];
+  res_list_url: string;
+}
+
+interface GamePatch {
+  version: string;
+  game_pkgs: GameFilePackage[];
+  audio_pkgs: GameAudioPackage[];
+  res_list_url: string;
+}
+
+interface GameFilePackage {
+  url: string;
+  md5: string;
+  size: string;
+  decompressed_size: string;
+}
+
+interface GameAudioPackage {
+  language: string;
+  url: string;
+  md5: string;
+  size: string;
+  decompressed_size: string;
+}

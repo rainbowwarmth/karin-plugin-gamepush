@@ -5,8 +5,6 @@ import { GAME_CONFIG, getGameChuckAPI, getGameName, getRedisKeys, versionCompara
 import { karin, logger, redis, segment } from 'node-karin'
 import notice from '@/model/notice'
 
-type GameKey = 'sr' | 'ys' | 'zzz' | 'bh3' | 'ww'
-
 class Api extends base {
   gameApis = new Map()
   e: any

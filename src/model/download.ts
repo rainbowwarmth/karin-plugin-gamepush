@@ -46,7 +46,6 @@ class Download {
         gameName: getGameName(game)
       })
 
-      console.log(data)
       if (game === 'ww') {
         return this.handleWWData(data, type)
       }
@@ -119,7 +118,7 @@ class Download {
    * @param {string} type - 下载类型
    * @returns {Object} 处理后的下载数据
    */
-  handleMHYData (data: any, type: string): object {
+  handleMHYData (data: GamePackageResponse, type: string): object {
     const packageData = data?.data?.game_packages?.[0] || {}
 
     const safeGetPatch = (patchArray: any[]) => {

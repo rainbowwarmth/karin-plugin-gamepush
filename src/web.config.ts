@@ -3,8 +3,6 @@ import { gameIds, getGameName } from '@/model/util'
 import cfg from '@/components/config'
 import { dir } from '@/components/path'
 
-type GameKey = 'sr' | 'ys' | 'zzz' | 'bh3' | 'ww'
-
 interface GameConfigItem {
   enable?: boolean
   log?: boolean
