@@ -1,0 +1,86 @@
+name: Publish Preview # 发布预览版本
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  preview:
+    # ⭐ 只在 release-please 生成的 PR 上运行
+    if: startsWith(github.event.pull_request.title, 'chore(main): release')
+
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ 检出代码
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2️⃣ Node 环境
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 3️⃣ 安装依赖
+      - name: Install dependencies
+        run: npm install
+
+      # 4️⃣ 生成预览版本号（每次必定不同）
+      - name: Generate preview version
+        run: |
+          VERSION=$(jq -r .version package.json)
+          RANDOM=$(node -e "const c='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';let s='';for(let i=0;i<8;i++)s+=c[Math.floor(Math.random()*c.length)];console.log(s)")
+          PREVIEW_VERSION="${VERSION}-${RANDOM}"
+
+          echo "Preview version: $PREVIEW_VERSION"
+          npm version "$PREVIEW_VERSION" --no-git-tag-version
+          echo "PREVIEW_VERSION=$PREVIEW_VERSION" >> $GITHUB_ENV
+
+      # 5️⃣ 构建
+      - name: Build
+        run: npm run build
+
+      # 6️⃣ 发布到 pkg.pr.new
+      - name: Publish preview to pkg.pr.new
+        id: pkgpr
+        run: |
+          npx --yes pkg-pr-new publish --comment=off --compact > output.txt
+
+          INSTALL_URL=$(grep -oE 'https://pkg\.pr\.new/[^[:space:]`]+' output.txt | head -n 1)
+          echo "install_url=$INSTALL_URL" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 7️⃣ PR 评论（只更新一条，不刷屏）
+      - name: Comment preview info
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          comment-tag: release-preview
+          mode: upsert
+          reactions: rocket
+          message: |
+            ## 🚀 Release PR 预览包已发布（pkg.pr.new）
+
+            **预览版本号**
+            ```
+            ${{ env.PREVIEW_VERSION }}
+            ```
+
+            **安装命令**
+            ```bash
+            npm i ${{ steps.pkgpr.outputs.install_url }}
+            ```
+
+            > 每次提交都会生成新的预览包  
+            > 仅用于发布前测试  
+            > 合并到 main 后将由正式流程发布 npm
