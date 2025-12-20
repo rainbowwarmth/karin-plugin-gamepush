@@ -15,8 +15,8 @@ jobs:
   preview:
     runs-on: ubuntu-latest
 
-    # ✅ 只在 release-please PR 上运行
-    if: startsWith(github.event.pull_request.title, 'chore(main): release')
+    # ✅ 只在 release-please PR 上运行（必须用 ${{ }}）
+    if: ${{ startsWith(github.event.pull_request.title, 'chore(main): release') }}
 
     steps:
       # 1️⃣ 检出代码
@@ -35,16 +35,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # 4️⃣ 生成随机预览版本号
+      # 4️⃣ 生成随机预览版本号（不依赖 version bump）
       - name: Generate preview version
         run: |
           VERSION=$(jq -r .version package.json)
           RANDOM=$(node -e "const c='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';let s='';for(let i=0;i<8;i++)s+=c[Math.floor(Math.random()*c.length)];console.log(s)")
           PREVIEW_VERSION="${VERSION}-${RANDOM}"
 
-          echo "Preview version: $PREVIEW_VERSION"
-          npm version "$PREVIEW_VERSION" --no-git-tag-version
           echo "PREVIEW_VERSION=$PREVIEW_VERSION" >> $GITHUB_ENV
+          npm version "$PREVIEW_VERSION" --no-git-tag-version
 
       # 5️⃣ 构建
       - name: Build
@@ -60,7 +59,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # 7️⃣ PR 评论（upsert）
+      # 7️⃣ PR 评论（覆盖更新）
       - name: Comment preview info
         uses: thollander/actions-comment-pull-request@v3
         with:
