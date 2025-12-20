@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     # ✅ 只在 release-please PR 上运行（必须用 ${{ }}）
-    if: ${{ startsWith(github.event.pull_request.title, 'chore(main): release') }}
+    if: startsWith(github.event.pull_request.title, 'chore(main): release')
 
     steps:
       # 1️⃣ 检出代码
