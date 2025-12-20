@@ -48,9 +48,9 @@ class Config {
       const fontPath = path.join(fonts, font.name)
       if (!fs.existsSync(fontPath)) {
         try {
-          logger.mark(`[karin-plugin-gamepush] 检测到字体缺失，开始下载: ${font.name}`)
+          logger.debug(`[karin-plugin-gamepush] 检测到字体缺失，开始下载: ${font.name}`)
           await common.downFile(font.url, fontPath)
-          logger.mark(`[karin-plugin-gamepush] 字体下载完成: ${font.name}`)
+          logger.debug(`[karin-plugin-gamepush] 字体下载完成: ${font.name}`)
         } catch (err) {
           logger.error(`[karin-plugin-gamepush] 字体下载失败: ${font.name}`, err)
         }
