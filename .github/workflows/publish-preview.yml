@@ -1,4 +1,4 @@
-name: Publish Preview # 发布预览版本
+name: Publish Preview
 
 on:
   pull_request:
@@ -14,8 +14,7 @@ permissions:
 jobs:
   preview:
     runs-on: ubuntu-latest
-
-    # ✅ 只在 release-please PR 上运行（必须用 ${{ }}）
+    # if 条件直接写表达式，无需 ${{ }}（已保留你的修正）
     if: startsWith(github.event.pull_request.title, 'chore(main): release')
 
     steps:
@@ -25,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 2️⃣ Node.js
+      # 2️⃣ 设置 Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -35,15 +34,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # 4️⃣ 生成随机预览版本号（不依赖 version bump）
+      # 4️⃣ 生成随机预览版本号
       - name: Generate preview version
         run: |
           VERSION=$(jq -r .version package.json)
-          RANDOM=$(node -e "const c='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';let s='';for(let i=0;i<8;i++)s+=c[Math.floor(Math.random()*c.length)];console.log(s)")
-          PREVIEW_VERSION="${VERSION}-${RANDOM}"
-
+          RANDOM_STR=$(node -e "const c='0123456789abcdefghijklmnopqrstuvwXYZ';let s='';for(let i=0;i<8;i++)s+=c[Math.floor(Math.random()*c.length)];console.log(s)")
+          PREVIEW_VERSION="${VERSION}-${RANDOM_STR}"
           echo "PREVIEW_VERSION=$PREVIEW_VERSION" >> $GITHUB_ENV
           npm version "$PREVIEW_VERSION" --no-git-tag-version
+        # 避免 RANDOM 与系统环境变量冲突，重命名为 RANDOM_STR
 
       # 5️⃣ 构建
       - name: Build
@@ -52,12 +51,12 @@ jobs:
       # 6️⃣ 发布到 pkg.pr.new
       - name: Publish preview to pkg.pr.new
         id: pkgpr
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npx --yes pkg-pr-new publish --comment=off --compact > output.txt
           INSTALL_URL=$(grep -oE 'https://pkg\.pr\.new/[^[:space:]`]+' output.txt | head -n 1)
           echo "install_url=$INSTALL_URL" >> $GITHUB_OUTPUT
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # 7️⃣ PR 评论（覆盖更新）
       - name: Comment preview info
