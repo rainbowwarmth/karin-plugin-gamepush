@@ -1,5 +1,4 @@
-name: Publish Preview # 发布预览版本的工作流程名称
-
+name: Publish Preview
 on:
   pull_request:
     types:
@@ -9,7 +8,7 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write # 需要写权限以便评论 PR
+  pull-requests: write
 
 jobs:
   preview:
@@ -19,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # 获取完整的 git 历史以便生成正确的版本号
+          fetch-depth: 0
 
       # 设置 Node.js 环境
       - name: Setup Node.js
