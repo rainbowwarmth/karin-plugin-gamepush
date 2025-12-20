@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.1.0](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.11...v1.1.0) (2025-12-20)
+
+
+### Features
+
+* 新增预览版工作流 ([049e194](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/049e19494417d33a3f07792d9c60700d9f6c9e70))
+
+
+### Bug Fixes
+
+* . ([380cbd0](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/380cbd05a66b8f3b9f4d6e7db7de01a117af3552))
+* . ([df64647](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/df646473705eb29f8477e34afafb9ed153f7d726))
+* . ([1d5b413](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/1d5b41337f0f597d8dc175d81757c1477b5b7daa))
+* . ([83cb149](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/83cb149f0ecbef0c785689933a24c505df34bda3))
+* . ([15d7892](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/15d789245a78a605ea18ad0dbe4efec4ffd2a382))
+* . ([4e03438](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/4e03438b13a1cb33eab7738f6138437588ae86b4))
+
 ## [1.0.11](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.10...v1.0.11) (2025-11-20)
 
 
