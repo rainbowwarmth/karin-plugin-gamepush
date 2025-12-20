@@ -1,4 +1,4 @@
-name: Publish Preview
+name: Publish Preview # 发布预览版本的工作流程名称
 
 on:
   pull_request:
@@ -9,66 +9,91 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
+  pull-requests: write # 需要写权限以便评论 PR
 
 jobs:
   preview:
     runs-on: ubuntu-latest
-    # 核心：与 runs-on 同级（4 空格缩进），字符串无多余字符
-    if: startsWith(github.event.pull_request.title, 'chore(main)')
-
     steps:
-      - name: Checkout code
+      # 检出代码（完整历史）
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # 获取完整的 git 历史以便生成正确的版本号
 
-      - name: Setup Node.js 20
+      # 设置 Node.js 环境
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: 'npm' # 可选：缓存依赖，提升速度
 
+      # 安装依赖（使用 frozen-lockfile 锁定版本，确保一致性）
       - name: Install dependencies
-        run: npm install
+        run: npm install --frozen-lockfile
 
-      - name: Generate preview version
+      # 修改版本号为预览版本（基于 PR 号 + 短 SHA，使用 PowerShell 脚本）
+      - name: Update version for preview
         run: |
-          VERSION=$(jq -r .version package.json)
-          RANDOM_STR=$(node -e "const chars='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';let str='';for(let i=0;i<8;i++)str+=chars[Math.floor(Math.random()*chars.length)];console.log(str)")
-          PREVIEW_VERSION="${VERSION}-${RANDOM_STR}"
-          echo "PREVIEW_VERSION=$PREVIEW_VERSION" >> $GITHUB_ENV
-          npm version "$PREVIEW_VERSION" --no-git-tag-version
+          # 获取当前 package.json 中的版本号
+          $currentVersion = (Get-Content package.json | ConvertFrom-Json).version
+          # 获取 PR 编号
+          $prNumber = "${{ github.event.pull_request.number }}"
+          # 获取提交的短 SHA（前 7 位）
+          $shortSha = "${{ github.event.pull_request.head.sha }}".Substring(0, 7)
+          # 生成预览版本号: 格式 1.0.0-pr.123.abc1234
+          $previewVersion = "$currentVersion-pr.$prNumber.$shortSha"
+          # 更新 package.json 中的版本号（不生成 git 标签）
+          npm version $previewVersion --no-git-tag-version
+          # 输出版本号到环境变量，供后续步骤使用
+          echo "PREVIEW_VERSION=$previewVersion" >> $env:GITHUB_ENV
+        shell: pwsh
 
-      - name: Build project
+      # 编译项目
+      - name: Build
         run: npm run build
 
-      - name: Publish preview to pkg.pr.new
-        id: pkgpr
+      # 使用 pkg.pr.new 发布预览版本（提取 PNPM 安装命令）
+      - name: Publish to pkg.pr.new
+        id: pkg-pr-new
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npx --yes pkg-pr-new publish --comment=off --compact > output.txt
-          INSTALL_URL=$(grep -oE 'https://pkg\.pr\.new/[^[:space:]`]+' output.txt | head -n 1)
-          echo "install_url=$INSTALL_URL" >> $GITHUB_OUTPUT
+          # 执行发布命令，输出 JSON 日志并关闭默认评论，使用 PNPM 作为包管理器
+          npx --yes pkg-pr-new publish --json output.json --comment=off --compact --packageManager=pnpm > pkg-output.txt 2>&1
 
-      - name: Comment preview info on PR
+          # 从输出日志中提取实际的安装 URL（容错处理：未找到则返回空）
+          ACTUAL_INSTALL_URL=$(grep -oE 'https://pkg\.pr\.new/[^[:space:]`]+' pkg-output.txt | head -n 1 || echo "")
+
+          # 构造 PNPM 安装命令（带 workspace 标识，未找到 URL 则提示错误）
+          if [ ! -z "$ACTUAL_INSTALL_URL" ]; then
+            # 优化：提取短链接格式，简化安装命令
+            if [[ "$ACTUAL_INSTALL_URL" =~ https://pkg\.pr\.new/[^/]+/[^/]+/([^/]+@.+) ]]; then
+              ACTUAL_INSTALL_URL="https://pkg.pr.new/${BASH_REMATCH[1]}"
+            fi
+            PNPM_INSTALL_CMD="pnpm add ${ACTUAL_INSTALL_URL} -w"
+          else
+            PNPM_INSTALL_CMD="❌ 预览包发布失败，未获取到安装链接"
+          fi
+
+          # 将安装命令存入步骤输出，供评论使用
+          echo "pnpm_install_cmd=$PNPM_INSTALL_CMD" >> $GITHUB_OUTPUT
+
+      # 在 PR 中评论预览版本信息（覆盖式更新）
+      - name: Comment preview info
         uses: thollander/actions-comment-pull-request@v3
         with:
-          comment-tag: release-preview
-          mode: upsert
-          reactions: rocket
+          comment-tag: published-packages # 唯一标签，用于更新评论
+          mode: upsert # 存在则更新，不存在则创建
+          reactions: rocket # 评论添加 🚀 表情
           message: |
-            ## 🚀 Release PR 预览包已发布
+            ## 🚀 预览包发布成功
 
-            ### 预览信息
-            - **版本号**: ${{ env.PREVIEW_VERSION }}
-            - **安装命令**: `npm i ${{ steps.pkgpr.outputs.install_url }}`
+            ### 🏷️ 包信息
+            - **版本:** `${{ env.PREVIEW_VERSION }}`
+            - **提交:** [`${{ github.event.pull_request.head.sha }}`](https://github.com/${{ github.repository }}/commit/${{ github.event.pull_request.head.sha }})
+            - **PR 编号:** #${{ github.event.pull_request.number }}
 
-            ### 快速安装
+            ### 📥 安装命令
             ```bash
-            # 直接安装预览包
-            npm i ${{ steps.pkgpr.outputs.install_url }}
-
-            # 指定包名+版本安装（替换为你的实际包名）
-            npm i your-package-name@${{ env.PREVIEW_VERSION }}
+            ${{ steps.pkg-pr-new.outputs.pnpm_install_cmd }}
