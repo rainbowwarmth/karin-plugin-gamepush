@@ -1,5 +1,7 @@
+# GitHub Actions 工作流：发布 Release PR 预览包
 name: Publish Preview
 
+# 触发条件：PR 打开、同步、重新打开
 on:
   pull_request:
     types:
@@ -7,73 +9,93 @@ on:
       - synchronize
       - reopened
 
+# 权限配置：读取代码，写入 PR 评论
 permissions:
   contents: read
   pull-requests: write
 
 jobs:
+  # 预览包发布任务
   preview:
+    # 运行环境：最新 Ubuntu
     runs-on: ubuntu-latest
-    # if 条件直接写表达式，无需 ${{ }}（已保留你的修正）
+    # 仅对标题以 'chore(main): release' 开头的 PR 触发
     if: startsWith(github.event.pull_request.title, 'chore(main): release')
 
+    # 任务步骤
     steps:
-      # 1️⃣ 检出代码
-      - name: Checkout
+      # 1. 检出仓库代码（完整历史，fetch-depth: 0）
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # 2️⃣ 设置 Node.js
-      - name: Setup Node.js
+      # 2. 配置 Node.js 20 环境
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          # 可选：缓存 npm 依赖，提升构建速度
+          cache: 'npm'
 
-      # 3️⃣ 安装依赖
+      # 3. 安装项目依赖
       - name: Install dependencies
         run: npm install
 
-      # 4️⃣ 生成随机预览版本号
+      # 4. 生成随机预览版本号（基于 package.json 版本 + 8位随机字符串）
       - name: Generate preview version
         run: |
+          # 读取 package.json 中的基础版本
           VERSION=$(jq -r .version package.json)
-          RANDOM_STR=$(node -e "const c='0123456789abcdefghijklmnopqrstuvwXYZ';let s='';for(let i=0;i<8;i++)s+=c[Math.floor(Math.random()*c.length)];console.log(s)")
+          # 生成 8 位大小写字母+数字随机字符串
+          RANDOM_STR=$(node -e "const chars='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';let str='';for(let i=0;i<8;i++)str+=chars[Math.floor(Math.random()*chars.length)];console.log(str)")
+          # 拼接预览版本号（如 1.0.0-a1b2c3d4）
           PREVIEW_VERSION="${VERSION}-${RANDOM_STR}"
+          # 将版本号存入环境变量，供后续步骤使用
           echo "PREVIEW_VERSION=$PREVIEW_VERSION" >> $GITHUB_ENV
+          # 更新 package.json 版本（不生成 git 标签）
           npm version "$PREVIEW_VERSION" --no-git-tag-version
-        # 避免 RANDOM 与系统环境变量冲突，重命名为 RANDOM_STR
 
-      # 5️⃣ 构建
-      - name: Build
+      # 5. 构建项目
+      - name: Build project
         run: npm run build
 
-      # 6️⃣ 发布到 pkg.pr.new
+      # 6. 发布预览包到 pkg.pr.new
       - name: Publish preview to pkg.pr.new
         id: pkgpr
         env:
+          # 注入 GitHub 内置 Token，用于 pkg.pr.new 认证
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # 执行发布命令，关闭默认评论，紧凑输出
           npx --yes pkg-pr-new publish --comment=off --compact > output.txt
+          # 从输出中提取安装链接
           INSTALL_URL=$(grep -oE 'https://pkg\.pr\.new/[^[:space:]`]+' output.txt | head -n 1)
+          # 将链接存入步骤输出，供后续 PR 评论使用
           echo "install_url=$INSTALL_URL" >> $GITHUB_OUTPUT
 
-      # 7️⃣ PR 评论（覆盖更新）
-      - name: Comment preview info
+      # 7. 向 PR 写入/更新预览包信息（覆盖式评论）
+      - name: Comment preview info on PR
         uses: thollander/actions-comment-pull-request@v3
         with:
+          # 评论唯一标签，用于后续更新（避免重复评论）
           comment-tag: release-preview
+          # 模式：存在则更新，不存在则创建
           mode: upsert
+          # 给评论添加 🚀 表情
           reactions: rocket
+          # 评论内容
           message: |
             ## 🚀 Release PR 预览包已发布
 
-            **版本**
-            ```
-            ${{ env.PREVIEW_VERSION }}
-            ```
+            ### 预览信息
+            - **版本号**: ${{ env.PREVIEW_VERSION }}
+            - **安装命令**: `npm i ${{ steps.pkgpr.outputs.install_url }}`
 
-            **安装命令**
+            ### 快速安装
             ```bash
+            # 安装预览包
             npm i ${{ steps.pkgpr.outputs.install_url }}
-            ```
+
+            # 或指定版本安装（如需锁定版本）
+            npm i your-package-name@${{ env.PREVIEW_VERSION }}
