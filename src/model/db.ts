@@ -7,9 +7,9 @@ import request from '@/components/request'
 
 class GamePushDB {
   REMOTE_VERSION_URL =
-    'https://cnb.cool/rainbowwarmth/resources/-/git/raw/main/GamePush-Plugin-version.json'
+    'https://cnb.cool/rainbowwarmth/resources/-/git/raw/main/GamePush-Plugin/GamePush-Plugin-version.json'
 
-  DB_DOWNLOAD_URL = 'https://cnb.cool/rainbowwarmth/resources/-/git/raw/main/GamePush-Plugin.db'
+  DB_DOWNLOAD_URL = 'https://cnb.cool/rainbowwarmth/resources/-/git/raw/main/GamePush-Plugin/GamePush-Plugin.db'
   DB_DIR: string
   DB_PATH: string
   VERSION_JSON_PATH: string
