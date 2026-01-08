@@ -3,44 +3,49 @@ on:
   push:
     branches:
       - main # 仅当推送到 main 分支时触发
+
 permissions:
+  id-token: write
   contents: write # 设置内容的权限为写
   pull-requests: write # 设置拉取请求的权限为写
   issues: write # 设置问题的权限为写
-  id-token: write # 关键新增：Trusted Publishing 基于 OIDC，必须开启该权限！
+
 jobs:
   release-please:
     # 设置工作流程运行环境为 Ubuntu
     runs-on: ubuntu-latest
-    # 关键新增：匹配 npm 配置的「环境名称」（比如你在 npm 填的 npm-publish）
-    environment: npm-publish
+    if: github.event_name == 'push' # 仅在 push 事件时运行(包括直接推送和 PR 合并)
     steps:
-      # 使用 release-please-action@v3 动作
-      - uses: google-github-actions/release-please-action@v3
+      # 使用 release-please-action@v4 动作
+      - uses: googleapis/release-please-action@v4
         id: release
         with:
-          # 设置发布类型为 Node.js
-          release-type: node
-      # 检出代码（仅当 release 创建成功时执行）
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          token: ${{ secrets.PAT_TOKEN }}
+      # 检出代码
       - uses: actions/checkout@v4
         if: ${{ steps.release.outputs.release_created }}
-      # 设置 Node.js 环境（仅当 release 创建成功时执行）
+      # 设置 Node.js 环境
       - uses: actions/setup-node@v4
         with:
           # 设置 Node.js 版本
           node-version: 20
-          # 设置 npm 注册表 URL（必须是官方源，不能用镜像）
+          # 设置 npm 注册表 URL
           registry-url: https://registry.npmjs.org
         if: ${{ steps.release.outputs.release_created }}
-      # 安装依赖（仅当 release 创建成功时执行）
+      # 安装依赖
       - run: npm install
         if: ${{ steps.release.outputs.release_created }}
-      # 编译（仅当 release 创建成功时执行）
+      # 升级npm版本
+      - run: npm install -g npm@latest
+        if: ${{ steps.release.outputs.release_created }}
+      # 编译
       - run: npm run build
         if: ${{ steps.release.outputs.release_created }}
-      # 删除开发依赖（仅当 release 创建成功时执行）
+      # 删除开发依赖
       - run: npm pkg delete devDependencies
         if: ${{ steps.release.outputs.release_created }}
-      # 发布到 npm（核心修改：去掉 NODE_AUTH_TOKEN，Trusted Publishing 自动授权）
+      # 发布npm
       - run: npm run pub
         if: ${{ steps.release.outputs.release_created }}
