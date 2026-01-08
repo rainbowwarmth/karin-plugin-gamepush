@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.16](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.15...v1.0.16) (2026-01-08)
+
+
+### Bug Fixes
+
+* . ([d757b0a](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/d757b0ab4b3bc277993f50ab803624a3eb716e07))
+
 ## [1.0.15](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.14...v1.0.15) (2026-01-08)
 
 
