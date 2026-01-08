@@ -7,6 +7,10 @@
 
 * 更新游戏版本下载链接 ([03daa77](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/03daa77e8801164fb6f15bb653fb641c886e3244))
 
+### Bug Fixes
+
+* 工作流 ([35299bc](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/35299bc2ccded3493f99de9afa983df9cf438bd4))
+
 ## [1.0.11](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.10...v1.0.11) (2025-11-20)
 
 
