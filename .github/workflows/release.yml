@@ -1,4 +1,5 @@
 name: Release and Publish # 发布和发布的工作流程名称
+
 on:
   push:
     branches:
@@ -12,39 +13,57 @@ permissions:
 
 jobs:
   release-please:
-    # 设置工作流程运行环境为 Ubuntu
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
+    
     steps:
-      # 使用 release-please-action@v3 动作
-      - uses: google-github-actions/release-please-action@v3
+      # Step 1: 使用 release-please-action 来自动创建发布
+      - name: Trigger release-please
+        uses: google-github-actions/release-please-action@v3
         id: release
         with:
-          # 设置发布类型为 Node.js
           release-type: node
-      # 检出代码
-      - uses: actions/checkout@v4
+
+      # Step 2: 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v4
         if: ${{ steps.release.outputs.release_created }}
-      # 设置 Node.js 环境
-      - uses: actions/setup-node@v4
+
+      # Step 3: 设置 Node.js 环境
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          # 设置 Node.js 版本
           node-version: 20
-          # 设置 npm 注册表 URL
           registry-url: https://registry.npmjs.org
         if: ${{ steps.release.outputs.release_created }}
-      # 安装依赖
-      - run: npm install
+
+      # Step 4: 安装依赖
+      - name: Install dependencies
+        run: npm install
         if: ${{ steps.release.outputs.release_created }}
-      # 升级npm版本
-      - run: npm install -g npm@latest
+
+      # Step 5: 升级 npm 版本
+      - name: Upgrade npm to the latest version
+        run: npm install -g npm@latest
         if: ${{ steps.release.outputs.release_created }}
-      # 编译
-      - run: npm run build
+
+      # Step 6: 编译项目
+      - name: Build project
+        run: npm run build
         if: ${{ steps.release.outputs.release_created }}
-      # 删除开发依赖
-      - run: npm pkg delete devDependencies
+
+      # Step 7: 删除开发依赖
+      - name: Remove dev dependencies
+        run: npm pkg delete devDependencies
         if: ${{ steps.release.outputs.release_created }}
-      # 发布npm
-      - run: npm run pub
+
+      # Step 8: 登录 npm
+      - name: Authenticate to npm
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+      # Step 9: 发布到 npm
+      - name: Publish to npm
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         if: ${{ steps.release.outputs.release_created }}
