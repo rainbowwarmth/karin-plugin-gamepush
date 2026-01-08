@@ -36,11 +36,11 @@ class Config {
     const fontFiles = [
       {
         name: 'HYWenHei-55W.ttf',
-        url: 'https://cnb.cool/rainbowwarmth/resources/-/git/raw/main/GamePush-resources/HYWenHei-55W.ttf'
+        url: 'https://cnb.cool/rainbowwarmth/resources/-/git/raw/main/GamePush-Plugin/HYWenHei-55W.ttf'
       },
       {
         name: 'NotoColorEmoji.ttf',
-        url: 'https://cnb.cool/rainbowwarmth/resources/-/git/raw/main/GamePush-resources/NotoColorEmoji.ttf'
+        url: 'https://cnb.cool/rainbowwarmth/resources/-/git/raw/main/GamePush-Plugin/NotoColorEmoji.ttf'
       }
     ]
 
