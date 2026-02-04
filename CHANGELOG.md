@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.17](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.16...v1.0.17) (2026-02-04)
+
+
+### Bug Fixes
+
+* 奇怪的判断 ([2881227](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/28812273a20d6a849afdd4df886b7b205d61be2f))
+* 推送 ([9677bb7](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/9677bb73de47b14ceace210878196261bf738e43))
+
 ## [1.0.16](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.15...v1.0.16) (2026-01-08)
 
 
