@@ -66,7 +66,7 @@ class Notifier extends base {
     pushChangeType: string
   }) {
     try {
-      if (oldVersion === '0.0.0') {
+      if (type === 'main' && oldVersion === '0.0.0') {
         logger.debug('[karin-plugin-gamepush] 初始版本0.0.0，不推送通知且不更新数据库')
         return
       }

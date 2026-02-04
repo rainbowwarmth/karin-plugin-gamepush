@@ -86,17 +86,18 @@ class Api extends base {
   async processPreDownload (game: GameKey, preData: any) {
     const { pre: preKey } = getRedisKeys(game)
     const currentPre = game === 'ww' ? preData?.version : preData?.tag
-    console.log('Current pre-download version from data:', currentPre)
     const storedPre = (await redis.get(preKey)) || null
     if (currentPre) {
-      await redis.set(preKey, currentPre)
-      notice.pushNotify({
-        type: 'pre',
-        game,
-        newVersion: currentPre,
-        oldVersion: storedPre || '0.0.0',
-        pushChangeType: config.getGameConfig(game).pushChangeType
-      })
+      if (currentPre !== storedPre) {
+        await redis.set(preKey, currentPre)
+        notice.pushNotify({
+          type: 'pre',
+          game,
+          newVersion: currentPre,
+          oldVersion: storedPre || '0.0.0',
+          pushChangeType: config.getGameConfig(game).pushChangeType
+        })
+      }
     } else if (storedPre) {
       await redis.del(preKey)
       notice.pushNotify({
