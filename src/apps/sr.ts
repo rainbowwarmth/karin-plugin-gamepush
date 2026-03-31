@@ -2,10 +2,10 @@ import config from '@/components/config'
 import api from '@/model/api'
 import db from '@/model/db'
 import download from '@/model/download'
-import { getRedisKeys } from '@/model/util'
+import { getRedisKeys, getReg } from '@/model/util'
 import karin, { common, redis } from 'node-karin'
 
-const srReg = '(\\*|星铁|星轨|穹轨|星穹|崩铁|星穹铁道|崩坏星穹铁道|铁道)'
+const srReg = getReg('sr')
 
 export const srCheck = karin.command(`^#*${srReg}版本监控$`, async (e) => {
   await api.checkVersion(true, 'sr')

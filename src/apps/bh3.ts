@@ -1,10 +1,10 @@
 import config from '@/components/config'
 import api from '@/model/api'
 import db from '@/model/db'
-import { getRedisKeys } from '@/model/util'
+import { getRedisKeys, getReg, } from '@/model/util'
 import karin, { common, redis } from 'node-karin'
 
-const bh3Reg = '(!|！|崩坏三|崩坏3|崩三|崩3|bbb|三崩子)'
+const bh3Reg = getReg('bh3')
 
 export const bh3Check = karin.command(`^#*${bh3Reg}版本监控$`, async (e) => {
   await api.checkVersion(true, 'bh3')
@@ -109,7 +109,7 @@ export const bh3VersionData = karin.command(`^#*${bh3Reg}版本数据(.*)$`, asy
     return e.reply('查询版本数据时发生错误，请稍后再试', { reply: true })
   }
 }, {
-  name: 'GamePush-鸣朝版本数据',
+  name: 'GamePush-崩坏3版本数据',
   priority: 100,
   event: 'message',
   permission: 'all'

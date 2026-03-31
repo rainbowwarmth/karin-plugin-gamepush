@@ -1,25 +1,10 @@
 import db from '@/model/db'
-import { getRedisKeys } from '@/model/util'
+import { getGameName, getRedisKeys, getReg } from '@/model/util'
 import karin, { common, redis } from 'node-karin'
 import fs from 'fs'
 
 type GameKey = 'sr' | 'ys' | 'zzz' | 'bh3' | 'ww'
-
-const gameRegexMap: Record<GameKey, RegExp> = {
-  ys: /(ys|YS|原神)/,
-  sr: /(\*|星铁|星轨|穹轨|星穹|崩铁|星穹铁道|崩坏星穹铁道|铁道)/,
-  zzz: /(%|％|绝区零|zzz|ZZZ|绝区)/,
-  bh3: /(!|！|崩坏三|崩坏3|崩三|崩3|bbb|三崩子)/,
-  ww: /(~|～|鸣潮|ww|WW|mc)/
-}
-
-const gameInfoMap: Record<GameKey, { id: GameKey; display: string }> = {
-  ys: { id: 'ys', display: '原神' },
-  sr: { id: 'sr', display: '星铁' },
-  zzz: { id: 'zzz', display: '绝区零' },
-  bh3: { id: 'bh3', display: '崩坏3' },
-  ww: { id: 'ww', display: '鸣潮' }
-}
+const GAME_KEYS: GameKey[] = ['ys', 'sr', 'zzz', 'bh3', 'ww']
 
 export const delkey = karin.command(buildReg('删除rediskey'), async (e) => {
   try {
@@ -125,24 +110,34 @@ export const updatedb = karin.command('#更新游戏版本数据', async (e) => 
   event: 'message',
   permission: 'master'
 })
-
+/**
+ * 匹配消息中的游戏ID（严格类型，无报错）
+ */
 function getMatchGameId (msg: string) {
-  const entries = Object.entries(gameRegexMap) as [GameKey, RegExp][]
-
-  for (const [id, regex] of entries) {
-    if (regex.test(msg)) return gameInfoMap[id]
+  for (const game of GAME_KEYS) {
+    const reg = getReg(game)
+    if (new RegExp(reg).test(msg)) {
+      return {
+        id: game,
+        display: getGameName(game)
+      }
+    }
   }
 
   if (/^#*(删除|设置)(预下载)?rediskey/.test(msg)) {
-    return gameInfoMap['ys']
+    return {
+      id: 'ys' as GameKey,
+      display: getGameName('ys')
+    }
   }
 
   return null
 }
 
+/**
+ * 构建指令正则（严格类型）
+ */
 function buildReg (action: string) {
-  const allPatterns = Object.values(gameRegexMap)
-    .map((r) => r.source)
-    .join('|')
+  const allPatterns = GAME_KEYS.map(g => getReg(g)).join('|')
   return new RegExp(`^#*(?:(?:${allPatterns})\\s*)?${action}$`)
 }

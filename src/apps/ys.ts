@@ -1,10 +1,10 @@
 import config from '@/components/config'
 import api from '@/model/api'
 import db from '@/model/db'
-import { getRedisKeys } from '@/model/util'
+import { getRedisKeys, getReg } from '@/model/util'
 import karin, { common, redis } from 'node-karin'
 
-const ysReg = '(ys|YS|原神)'
+const ysReg = getReg('ys')
 
 export const ysCheck = karin.command(`^#*${ysReg}?版本监控$`, async (e) => {
   await api.checkVersion(true, 'ys')

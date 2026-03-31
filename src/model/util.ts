@@ -14,29 +14,34 @@ export const GAME_CONFIG = {
     id: '1Z8W5NHUQb',
     name: '原神',
     biz: 'hk4e_cn',
-    redisPrefix: 'YS'
+    redisPrefix: 'YS',
+    reg: '(ys|YS|原神)'
   },
   sr: {
     id: '64kMb5iAWu',
     name: '崩坏:星穹铁道',
     biz: 'hkrpg_cn',
-    redisPrefix: 'SR'
+    redisPrefix: 'SR',
+    reg: '(\\*|星铁|星轨|穹轨|星穹|崩铁|星穹铁道|崩坏星穹铁道|铁道)'
   },
   zzz: {
     id: 'x6znKlJ0xK',
     name: '绝区零',
     biz: 'nap_cn',
-    redisPrefix: 'ZZZ'
+    redisPrefix: 'ZZZ',
+    reg: '(%|％|绝区零|zzz|ZZZ|绝区)'
   },
   bh3: {
     id: 'osvnlOc0S8',
     name: '崩坏3',
     biz: 'bh3_cn',
-    redisPrefix: 'BH3'
+    redisPrefix: 'BH3',
+    reg: '(!|！|崩坏三|崩坏3|崩三|崩3|bbb|三崩子)'
   },
   ww: {
     name: '鸣潮',
-    redisPrefix: 'WW'
+    redisPrefix: 'WW',
+    reg: '(~|～|鸣潮|ww|WW|mc)'
   }
 }
 
@@ -63,6 +68,8 @@ export const getGameIcon = () => {
 }
 
 export const getGameName = (game: GameKey) => GAME_CONFIG[game]?.name || '未知游戏'
+
+export const getReg = (game: GameKey) => GAME_CONFIG[game]?.reg || '当前游戏未定义正则'
 
 export const getRedisKeys = (game: GameKey) => {
   const prefix = GAME_CONFIG[game]?.redisPrefix || 'GAME'

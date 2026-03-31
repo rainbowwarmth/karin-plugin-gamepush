@@ -2,10 +2,10 @@ import config from '@/components/config'
 import api from '@/model/api'
 import db from '@/model/db'
 import download from '@/model/download'
-import { getRedisKeys } from '@/model/util'
+import { getRedisKeys, getReg } from '@/model/util'
 import karin, { common, redis } from 'node-karin'
 
-const zzzReg = '(%|％|绝区零|zzz|ZZZ|绝区)'
+const zzzReg = getReg('zzz')
 
 export const zzzCheck = karin.command(`^#*${zzzReg}版本监控$`, async (e) => {
   await api.checkVersion(true, 'zzz')
