@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.19](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.18...v1.0.19) (2026-04-20)
+
+
+### Bug Fixes
+
+* 移除推送消息的日志输出并在模型定义中添加时间字段 ([4218d73](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/4218d734a62f30d3155daad1d160132cce7013c9))
+
 ## [1.0.18](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.17...v1.0.18) (2026-04-20)
 
 
