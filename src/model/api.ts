@@ -111,7 +111,6 @@ class Api extends base {
   }
 
   async sendToGroups (msg: any, game: GameKey, gameConfig: GameConfig, pushChangeType: string) {
-    console.log(`[karin-plugin-gamepush][${getGameName(game)}] 开始推送消息`)
     if (!gameConfig?.pushGroups?.length) {
       logger.debug(`[karin-plugin-gamepush][${getGameName(game)}] 未配置推送群组`)
       return

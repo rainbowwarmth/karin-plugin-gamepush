@@ -98,7 +98,15 @@ class GamePushDB {
     return true
   }
 
-  defineModel (name: string, fields: { id: { type: DataTypes.IntegerDataTypeConstructor; primaryKey: boolean; autoIncrement: boolean } | { type: DataTypes.IntegerDataTypeConstructor; primaryKey: boolean; autoIncrement: boolean }; game: { type: DataTypes.StringDataTypeConstructor; allowNull: boolean } | { type: DataTypes.StringDataTypeConstructor; allowNull: boolean }; version?: { type: DataTypes.StringDataTypeConstructor; allowNull: boolean }; size: { type: DataTypes.StringDataTypeConstructor; allowNull: boolean } | { type: DataTypes.StringDataTypeConstructor; allowNull: boolean }; ver?: { type: DataTypes.StringDataTypeConstructor; allowNull: boolean }; oldver?: { type: DataTypes.StringDataTypeConstructor; allowNull: boolean } }) {
+  defineModel (name: string, fields: { 
+    id: { type: DataTypes.IntegerDataTypeConstructor; primaryKey: boolean; autoIncrement: boolean } | { type: DataTypes.IntegerDataTypeConstructor; primaryKey: boolean; autoIncrement: boolean }; 
+    game: { type: DataTypes.StringDataTypeConstructor; allowNull: boolean } | { type: DataTypes.StringDataTypeConstructor; allowNull: boolean }; 
+    version?: { type: DataTypes.StringDataTypeConstructor; allowNull: boolean }; 
+    size: { type: DataTypes.StringDataTypeConstructor; allowNull: boolean } | { type: DataTypes.StringDataTypeConstructor; allowNull: boolean }; 
+    ver?: { type: DataTypes.StringDataTypeConstructor; allowNull: boolean }; 
+    oldver?: { type: DataTypes.StringDataTypeConstructor; allowNull: boolean };
+    time?: { type: DataTypes.TextDataTypeConstructor; allowNull: boolean };
+    }) {
     return this.sequelize.define(name, fields, {
       tableName: name,
       timestamps: false,
