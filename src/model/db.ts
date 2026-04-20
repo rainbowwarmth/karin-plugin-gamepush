@@ -111,7 +111,8 @@ class GamePushDB {
       id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
       game: { type: DataTypes.STRING, allowNull: false },
       version: { type: DataTypes.STRING, allowNull: false },
-      size: { type: DataTypes.STRING, allowNull: false }
+      size: { type: DataTypes.STRING, allowNull: false },
+ 	    time: { type: DataTypes.TEXT, allowNull: true }
     })
 
     this.PreModel = this.defineModel('pre', {
@@ -119,7 +120,8 @@ class GamePushDB {
       game: { type: DataTypes.STRING, allowNull: false },
       ver: { type: DataTypes.STRING, allowNull: false },
       oldver: { type: DataTypes.STRING, allowNull: false },
-      size: { type: DataTypes.STRING, allowNull: false }
+      size: { type: DataTypes.STRING, allowNull: false },
+ 	    time: { type: DataTypes.TEXT, allowNull: true }
     })
   }
 
@@ -138,15 +140,24 @@ class GamePushDB {
     logger.debug(`[${dir.name}] 📊 数据库连接成功: ${this.DB_PATH}`)
 
     this.initializeModels()
-    await this.sequelize.sync()
+    await this.sequelize.sync({ alter: true })
     logger.debug(`[${dir.name}] ✅ 数据库模型同步完成`)
   }
 
   async storeMainSizeData (game: GameKey, version: string, size: string) {
     await this.ensureInitialized()
+    const Time = new Date().toLocaleString("zh-CN", {
+      timeZone: "Asia/Shanghai",
+ 	    year: "numeric",
+ 	    month: "2-digit",
+ 	    day: "2-digit",
+      hour: "2-digit",
+ 	    minute: "2-digit",
+ 	    second: "2-digit"
+    })
     const [created] = await this.MainModel.findOrCreate({
       where: { game, version },
-      defaults: { size }
+      defaults: { size, time: Time }
     })
     if (created) logger.debug(`[${dir.name}] 💾 main 表新增: ${game}-${version} | ${size}`)
     return created
@@ -154,9 +165,18 @@ class GamePushDB {
 
   async storePreSizeData (game: GameKey, ver: string, oldver: string, size: string) {
     await this.ensureInitialized()
+    const Time = new Date().toLocaleString("zh-CN", {
+      timeZone: "Asia/Shanghai",
+ 	    year: "numeric",
+ 	    month: "2-digit",
+ 	    day: "2-digit",
+      hour: "2-digit",
+ 	    minute: "2-digit",
+ 	    second: "2-digit"
+    })
     const [created] = await this.PreModel.findOrCreate({
       where: { game, ver, oldver },
-      defaults: { size }
+      defaults: { size, time: Time }
     })
     if (created) { logger.debug(`[${dir.name}] 💾 pre 表新增: ${game}-${ver} | old: ${oldver} | ${size}`) }
     return created
