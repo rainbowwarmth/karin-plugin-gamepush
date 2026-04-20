@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.17...v1.1.0) (2026-04-20)
+
+
+### Features
+
+* 在数据库模型中添加时间字段以记录版本数据存储时间 ([f441691](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/f441691bb133a8f7be3be25b7d0d36ec84d9f082))
+
+
+### Bug Fixes
+
+* 更新版本数据提示为星铁和绝区零 ([f441691](https://github.com/rainbowwarmth/karin-plugin-gamepush/commit/f441691bb133a8f7be3be25b7d0d36ec84d9f082))
+
 ## [1.0.17](https://github.com/rainbowwarmth/karin-plugin-gamepush/compare/v1.0.16...v1.0.17) (2026-02-04)
 
 
